@@ -21,7 +21,7 @@ const DeliveryInfo = () => {
                         <div className="delivery-info__conditions">
                             <div className="delivery-info__condition-item">
                                 <span className="condition-label">Стоимость доставки:</span>
-                                <span className="condition-value">от 100 ₽</span>
+                                <span className="condition-value">от 150 ₽</span>
                             </div>
                             <div className="delivery-info__condition-item">
                                 <span className="condition-label">Минимальная сумма заказа:</span>
