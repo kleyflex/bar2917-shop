@@ -25,7 +25,6 @@ const MainPage = () => {
   // Сохраняем локации в store
   useEffect(() => {
     if (locationsData) {
-      console.log('Received locations:', locationsData);
       dispatch(setLocations(locationsData));
     }
   }, [locationsData, dispatch]);
@@ -34,20 +33,10 @@ const MainPage = () => {
   const { data: productsData, isLoading, error } = useQuery({
     queryKey: ['main-products', selectedLocationId],
     queryFn: async () => {
-      console.log('Fetching products with state:', { locations: locations.length, selectedLocationId });
       const result = await LocationService.getLocationWithProducts();
-      console.log('Products result:', result);
       return result;
     },
     enabled: !!locations.length,
-  });
-
-  console.log('Render state:', {
-    hasLocations: !!locations.length,
-    selectedLocationId,
-    productsCount: productsData?.products?.length,
-    isLoading,
-    error
   });
 
   return (

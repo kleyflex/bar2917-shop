@@ -12,8 +12,6 @@ const Dashboard: FC = () => {
         select: (data) => data.data
     })
 
-    console.log(`'это пиздец' ${data}`)
-
     return (
         <MainLayout>
             <section>

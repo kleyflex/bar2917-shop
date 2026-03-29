@@ -56,10 +56,7 @@ const CatalogMain: FC<ICatalog> = ({ products = [], title }) => {
     // Выбираем товары с заданными идентификаторами
     const displayedProducts = useMemo(() => {
         const targetIds = [1, 2, 15, 28, 41, 38, 43, 51, 64, 73, 86, 104];
-        console.log('Incoming products:', products);
-        console.log('Products IDs:', products.map(p => p.id));
         const filtered = products.filter((product) => targetIds.includes(product.id));
-        console.log('Filtered products:', filtered);
         return filtered;
     }, [products]);
 

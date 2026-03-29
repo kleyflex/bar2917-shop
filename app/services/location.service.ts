@@ -36,12 +36,10 @@ export interface IProductsByLocation {
 
 export const LocationService = {
   async getAll() {
-    console.log('Fetching all locations...');
     const response = await instance<ILocation[]>({
       url: `/${LOCATIONS}`,
       method: 'GET'
     });
-    console.log('Locations response:', response);
     return response.data;
   },
 
@@ -55,31 +53,26 @@ export const LocationService = {
 
   getUserLocation(): number | null {
     const locationId = store.getState().location.selectedLocationId;
-    console.log('Current location ID from store:', locationId);
     return locationId;
   },
 
   async getLocationId(): Promise<number> {
     const locationId = this.getUserLocation();
-    console.log('Getting location ID, current:', locationId);
-    
+
     if (locationId !== null) {
       return locationId;
     }
 
     try {
       const locations = await this.getAll();
-      console.log('All locations for ID:', locations);
-      
+
       if (locations && locations.length > 0) {
         const defaultLocation = locations.find(loc => loc.isDefault);
         if (defaultLocation) {
-          console.log('Found default location:', defaultLocation);
           return defaultLocation.id;
         }
         const activeLocation = locations.find(loc => loc.isActive);
         if (activeLocation) {
-          console.log('Found active location:', activeLocation);
           return activeLocation.id;
         }
       }
@@ -92,11 +85,8 @@ export const LocationService = {
   },
 
   async getProductsByCategory(categorySlug: string): Promise<{ products: any[], locationId: number }> {
-    console.log('Getting products for category:', categorySlug);
-    
     // Получаем текущую локацию из store
     const { locations, selectedLocationId } = store.getState().location;
-    console.log('Current state:', { locations: locations.length, selectedLocationId });
 
     if (!locations.length) {
       throw new Error('No locations available');
@@ -111,8 +101,6 @@ export const LocationService = {
       throw new Error('No active locations found');
     }
 
-    console.log('Target location:', targetLocation.name);
-
     // Фильтруем продукты для нужной категории
     const processedProducts = targetLocation.products
       .filter(item => item.isAvailable && item.product.category.slug === categorySlug)
@@ -121,8 +109,6 @@ export const LocationService = {
         price: item.price,
         isAvailable: item.isAvailable
       }));
-
-    console.log('Found products:', processedProducts.length);
 
     return {
       products: processedProducts,

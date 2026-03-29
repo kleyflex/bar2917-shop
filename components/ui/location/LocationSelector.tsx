@@ -29,8 +29,6 @@ export default function LocationSelector() {
     };
   }, []);
 
-  console.log('Current state:', { selectedLocationId, locationsCount: locations.length });
-
   const { data: locationsData, isLoading } = useQuery<ILocation[]>({
     queryKey: ['locations'],
     queryFn: () => LocationService.getAll(),
@@ -41,7 +39,6 @@ export default function LocationSelector() {
 
   // Эффект для установки локаций в store
   useEffect(() => {
-    console.log('Setting locations effect, response:', locationsData);
     if (locationsData) {
       dispatch(setLocations(locationsData));
     }
@@ -51,13 +48,11 @@ export default function LocationSelector() {
   useEffect(() => {
     const initializeSelectedLocation = async () => {
       if (locations.length > 0 && !selectedLocationId) {
-        console.log('Initializing selected location, locations:', locations);
         const defaultLocation = locations.find(loc => loc.isDefault && loc.isActive);
         const activeLocation = locations.find(loc => loc.isActive);
         const locationToSet = defaultLocation || activeLocation;
-        
+
         if (locationToSet) {
-          console.log('Setting default location:', locationToSet);
           dispatch(setSelectedLocation(locationToSet.id));
           
           // Инвалидируем зависимые запросы после установки локации
@@ -75,7 +70,6 @@ export default function LocationSelector() {
   }, [locations, selectedLocationId, dispatch, queryClient]);
 
   const handleLocationChange = async (locationId: number) => {
-    console.log('Changing location to:', locationId);
     dispatch(setSelectedLocation(locationId));
     onClose();
 
@@ -100,7 +94,6 @@ export default function LocationSelector() {
   }
 
   const selectedLocation = locations.find(loc => loc.id === selectedLocationId);
-  console.log('Selected location:', selectedLocation);
 
   return (
     <>

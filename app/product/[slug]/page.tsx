@@ -18,7 +18,6 @@ export default function ProductPage({ params }: IPageSlugParam) {
     const slug = params?.slug;
     
     if (!slug) {
-        console.log('No slug provided');
         return notFound();
     }
 

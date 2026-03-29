@@ -7,7 +7,6 @@ import { PRODUCTS, TypeProductData, TypeProductDataFilters } from "./product.typ
 export const ProductService = {
   async getAll(queryData = {} as TypeProductDataFilters) {
     const locationId = await LocationService.getLocationId();
-    console.log('Request params:', { ...queryData, locationId });
     return instance<TypeProducts>({
       url: PRODUCTS,
       method: 'GET',
@@ -26,11 +25,8 @@ export const ProductService = {
   
   async getBySlug(slug: string) {
     try {
-      console.log('Getting product by slug:', slug);
-      
       // Получаем текущую локацию из store
       const { locations, selectedLocationId } = store.getState().location;
-      console.log('Current state:', { locations: locations.length, selectedLocationId });
 
       if (!locations.length) {
         throw new Error('No locations available');
@@ -45,16 +41,12 @@ export const ProductService = {
         throw new Error('No active locations found');
       }
 
-      console.log('Target location:', targetLocation.name);
-
       // Ищем продукт в локации
       const locationProduct = targetLocation.products.find(item => item.product.slug === slug);
       
       if (!locationProduct) {
         throw new Error('Product not found');
       }
-
-      console.log('Found product:', locationProduct);
 
       // Возвращаем в нужном формате
       return {
