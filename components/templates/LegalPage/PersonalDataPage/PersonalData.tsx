@@ -17,9 +17,9 @@ const PersonalData = () => {
 
                     <p>1.3. Клиент обязан полностью ознакомиться с настоящей Политикой до момента использования Сервисов, а также со следующими правовыми документами ИП:</p>
                     <ul className="list-disc list-inside">
-                        <li><a href="http://bar2917.ru/legal/offer" target="_blank" rel="noopener noreferrer">Публичная оферта о продаже товаров дистанционным способом;</a></li>
-                        <li><a href="http://bar2917.ru/legal/user-agreement" target="_blank" rel="noopener noreferrer">Пользовательское соглашение;</a></li>
-                        <li><a href="http://bar2917.ru/legal/cookies" target="_blank" rel="noopener noreferrer">Политика использования файлов cookies;</a></li>
+                        <li><a href="https://bar2917.ru/legal/offer" target="_blank" rel="noopener noreferrer">Публичная оферта о продаже товаров дистанционным способом;</a></li>
+                        <li><a href="https://bar2917.ru/legal/user-agreement" target="_blank" rel="noopener noreferrer">Пользовательское соглашение;</a></li>
+                        <li><a href="https://bar2917.ru/legal/cookies" target="_blank" rel="noopener noreferrer">Политика использования файлов cookies;</a></li>
                     </ul>
                     
                     <h2 className="text-xl font-semibold mt-3 mb-3">Что такое cookies?</h2>
