@@ -9,9 +9,8 @@ const nextConfig = {
     images: {
         remotePatterns: [
             {
-              protocol: 'http',
-              hostname: '83.222.10.254',
-              port: '4200',
+              protocol: 'https',
+              hostname: 'bar2917.ru',
               pathname: '/assets/**',
             },
         ]
