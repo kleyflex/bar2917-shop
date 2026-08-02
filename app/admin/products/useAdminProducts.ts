@@ -1,38 +1,44 @@
 import { ProductService } from "@/app/services/product/product.service";
-import { IListItem } from "@/components/ui/admin/admin-list/admin-list.interface";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
+export interface IAdminProductRow {
+    id: number;
+    name: string;
+    image: string;
+    categoryName: string;
+    isActive: boolean;
+    slug: string;
+}
+
 export const useAdminProducts = () => {
     const { data, isFetching, refetch } = useQuery({
-        queryKey: ['getAdminProducts'], 
+        queryKey: ['getAdminProducts'],
         queryFn: () => ProductService.getAll(),
-        select: data => data.data.products.map((product): IListItem => {
-            return {
-                id: product.id,
-                viewUrl: `/product/${product.slug}`,
-                editUrl: `/admin/product/edit/${product.id}`,
-                items: [
-                    product.image,
-                    product.category.name,
-                    product.name
-                    
-                ]
-            }
-        })
+        select: data => data.data.products.map((product): IAdminProductRow => ({
+            id: product.id,
+            name: product.name,
+            image: product.image,
+            categoryName: product.category?.name ?? '—',
+            isActive: (product as { isActive?: boolean }).isActive ?? true,
+            slug: product.slug
+        }))
     })
 
     const { mutate } = useMutation({
         mutationKey: ['deleteProduct'],
         mutationFn: (id: number) => ProductService.delete(id),
         onSuccess: () => {
-            toast.success('Продукт успешно удален')
+            toast.success('Товар удалён')
             refetch()
+        },
+        onError: () => {
+            toast.error('Не удалось удалить товар')
         }
     })
 
     return {
-        mutate, 
+        mutate,
         data,
         isFetching
     }

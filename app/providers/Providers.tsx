@@ -21,9 +21,7 @@ export default function Providers({
 }: PropsWithChildren<unknown>) {
     const content = (
         <AuthProvider>
-            <Toaster containerStyle={{
-                left: "40%",
-            }} />
+            <Toaster position="top-center" containerClassName="toaster-container" />
             <Next13ProgressBar height='3px' color='#FF8A00' showOnShallow/>
             <NextUIProvider>
                 {children}

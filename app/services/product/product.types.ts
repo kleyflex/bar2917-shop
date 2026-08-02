@@ -1,13 +1,27 @@
 
 export const PRODUCTS = 'products'
 
-export type TypeProductData = {
+// POST /products — создание товара
+export type TypeProductCreateData = {
   name: string
-  price: number
+  description?: string
+  image?: string
+  weight?: number
+  categoryId: number
+}
+
+// PUT /products/:id — обновление товара с ценами по локациям
+export type TypeProductUpdateData = {
+  name: string
   description?: string
   image: string
-  categoryId: number
   weight: number
+  isActive: boolean
+  categoryId: number
+  items: {
+    locationId: number
+    price: number
+  }[]
 }
 
 export type TypeProductDataFilters = {
@@ -21,4 +35,3 @@ export enum EnumProductSort {
     NEWEST = 'newest',
     OLDEST = 'oldest',
 }
-

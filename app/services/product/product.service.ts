@@ -1,7 +1,7 @@
 import { instance } from "@/app/api/api.interceptor"
 import { IProduct, IProductFull, TypeProducts } from "@/app/types/product.interface"
 import { LocationService } from "../location.service"
-import { PRODUCTS, TypeProductData, TypeProductDataFilters } from "./product.types"
+import { PRODUCTS, TypeProductCreateData, TypeProductDataFilters, TypeProductUpdateData } from "./product.types"
 
 // Приводит ответ API (цены по всем локациям) к IProduct с ценой выбранной локации
 const toProductWithPrice = (product: IProductFull, locationId: number | null): IProduct => {
@@ -68,15 +68,24 @@ export const ProductService = {
     return toProductWithPrice(response.data, locationId);
   },
 
-  async create() {
-    return instance<IProduct>({
-      url: PRODUCTS,
-      method: 'POST'
+  // Полный ответ API с ценами по всем локациям — для формы редактирования в админке
+  async getByIdFull(id: string | number) {
+    return instance<IProductFull>({
+      url: `${PRODUCTS}/${id}`,
+      method: 'GET'
     })
   },
 
-  async update(id: string | number, data: TypeProductData) {
-    return instance<IProduct>({
+  async create(data: TypeProductCreateData) {
+    return instance<IProductFull>({
+      url: PRODUCTS,
+      method: 'POST',
+      data
+    })
+  },
+
+  async update(id: string | number, data: TypeProductUpdateData) {
+    return instance<IProductFull>({
       url: `${PRODUCTS}/${id}`,
       method: 'PUT',
       data

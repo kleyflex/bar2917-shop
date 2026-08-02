@@ -8,6 +8,12 @@ const nextConfig = {
               hostname: 'bar2917.ru',
               pathname: '/assets/**',
             },
+            // Локальная разработка
+            {
+              protocol: 'http',
+              hostname: 'localhost',
+              pathname: '/assets/**',
+            },
         ]
     },
 }

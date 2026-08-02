@@ -145,6 +145,11 @@ h1 {
   flex-direction: row !important;
 }
 
+.toaster-container,
+.toaster-container div {
+  flex-direction: row;
+}
+
 .btn__default {
   width: 100% !important;
   max-width: 330px !important;

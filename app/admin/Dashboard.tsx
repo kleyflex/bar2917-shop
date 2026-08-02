@@ -30,7 +30,7 @@ const Dashboard: FC = () => {
                         ))}
                     </div>
                     ) : (
-                    <div>Statistics not loaded!</div>
+                    <div>Не удалось загрузить статистику</div>
                     )}
             </section>
         </MainLayout>

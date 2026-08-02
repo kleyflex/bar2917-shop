@@ -13,22 +13,14 @@ const SidebarMenu = () => {
       </div>
       <div className='sidebar__menu'>
         {pathname.startsWith('/admin') && (
-          <><Link className='sidebar__menu__item' href='/admin'>
+          <>
+          <Link className='sidebar__menu__item' href='/admin'>
             <span className='sidebar__menu__item__span'>Статистика</span>
-          </Link>
-          <Link className='sidebar__menu__item' href='/admin/orders'>
-              <span className='sidebar__menu__item__span'>Заказы</span>
           </Link>
           <Link className='sidebar__menu__item' href='/admin/products'>
               <span className='sidebar__menu__item__span'>Товары</span>
           </Link>
-          <Link className='sidebar__menu__item' href='/admin/categories'>
-              <span className='sidebar__menu__item__span'>Категории</span>
-          </Link>
-          <Link className='sidebar__menu__item' href='/admin/feedbacks'>
-              <span className='sidebar__menu__item__span'>Обратная связь</span>
-          </Link>
-</>
+          </>
         )}
         {!pathname.startsWith('/admin') && (
           <>
