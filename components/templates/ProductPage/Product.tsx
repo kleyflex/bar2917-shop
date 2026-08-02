@@ -1,8 +1,6 @@
 'use client'
 import { FolderNameForImage } from "@/app/constants/app.constants";
-import { ProductService } from "@/app/services/product/product.service";
 import { IProduct } from "@/app/types/product.interface";
-import { useQuery } from "@tanstack/react-query";
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import SimilarProducts from "./SimilarProducts";
@@ -14,7 +12,7 @@ interface IProductPage {
     slug?: string;
 }
 
-const SERVER_URL_FOR_IMAGE = process.env.SERVER_URL_IMAGE as string;
+const SERVER_URL_FOR_IMAGE = process.env.NEXT_PUBLIC_SERVER_URL_IMAGE as string;
 
 export default function Product({
     initialProduct,
@@ -39,17 +37,8 @@ export default function Product({
         };
     }, []);
 
-    const queryKey = ['get product', initialProduct.id];
-    const queryFn = () => ProductService.getBySlug(slug);
-
-    const { data: response, isLoading } = useQuery({
-        queryKey,
-        queryFn,
-        initialData: { data: { data: initialProduct } },
-        enabled: !!slug
-    });
-
-    const product = response?.data?.data ?? initialProduct;
+    // Данные приходят с сервера через ProductPageClient и уже учитывают выбранную локацию
+    const product = initialProduct;
     const imageUrl = `${SERVER_URL_FOR_IMAGE}/${FolderNameForImage}/${product.image}`;
 
     return (

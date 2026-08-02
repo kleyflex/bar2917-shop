@@ -1,6 +1,16 @@
 import { IAuthResponse, ITokens } from '@/app/store/user/user.interface';
 import Cookies from 'js-cookie';
 
+// Синхронизация в беком 
+const ACCESS_TOKEN_EXPIRES_DAYS = 1 / 24; // access 1 час,
+const REFRESH_TOKEN_EXPIRES_DAYS = 30; // refresh 30 дней
+
+const cookieOptions = (expiresDays: number): Cookies.CookieAttributes => ({
+  expires: expiresDays,
+  sameSite: 'lax',
+  secure: process.env.NODE_ENV === 'production'
+});
+
 export const getAccessToken = () => {
     const accessToken = Cookies.get('accessToken')
     return accessToken || null
@@ -16,8 +26,8 @@ export const getUserFromStorage = () => {
 }
 
 export const saveTokensStorage = (data: ITokens) => {
-  Cookies.set('accessToken', data.accessToken);
-  Cookies.set('refreshToken', data.refreshToken);
+  Cookies.set('accessToken', data.accessToken, cookieOptions(ACCESS_TOKEN_EXPIRES_DAYS));
+  Cookies.set('refreshToken', data.refreshToken, cookieOptions(REFRESH_TOKEN_EXPIRES_DAYS));
 };
 
 export const removeFromStorage = () => {

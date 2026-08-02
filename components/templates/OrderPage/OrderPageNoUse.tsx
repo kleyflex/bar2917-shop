@@ -20,7 +20,7 @@ import { FaMapMarkerAlt } from 'react-icons/fa'; // Импортируем ик�
 import OrderItem from './OrderItem/OrderItem';
 
 
-const SERVER_URL_FOR_IMAGE = process.env.SERVER_URL_IMAGE as string
+const SERVER_URL_FOR_IMAGE = process.env.NEXT_PUBLIC_SERVER_URL_IMAGE as string
 
 const OrderPage = () => {
     // Определение типа данных, возвращаемых OrderService.place

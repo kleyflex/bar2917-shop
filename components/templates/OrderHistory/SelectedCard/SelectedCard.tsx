@@ -4,7 +4,7 @@ import Image from "next/image";
 import { FC } from "react";
 
 
-const SERVER_URL_FOR_IMAGE = process.env.SERVER_URL_IMAGE as string
+const SERVER_URL_FOR_IMAGE = process.env.NEXT_PUBLIC_SERVER_URL_IMAGE as string
 
 const SelectedCard: FC<{item: ICartItem}> = ({item}) => {
     const imageUrl = `${SERVER_URL_FOR_IMAGE}/${FolderNameForImage}/${item.product.image}`;

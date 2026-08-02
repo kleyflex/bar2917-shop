@@ -1,13 +1,21 @@
+'use client'
 import { useAuth } from '@/components/hocs/useAuth';
 import MainLayout from '@/components/layouts/MainLayout';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 const OrderPage = () => {
     const { user } = useAuth();
     const router = useRouter();
 
+    // Редирект только в эффекте
+    useEffect(() => {
+        if (!user) {
+            router.push('/');
+        }
+    }, [user]);
+
     if(!user) {
-        router.push('/');
         return null;
     }
 

@@ -24,7 +24,7 @@ export const AuthService =  {
       const refreshToken = Cookies.get('refreshToken');
   
       const response = await axios.post<string, { data: IAuthResponse }>(
-        process.env.SERVER_URL + '/auth/login/accessToken',
+        process.env.NEXT_PUBLIC_SERVER_URL + '/auth/login/accessToken',
         { refreshToken },
         {
           headers: getContentType()

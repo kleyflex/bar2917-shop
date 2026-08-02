@@ -14,6 +14,7 @@ const AuthProvider: FC<PropsWithChildren<unknown>> = ({
   const { user } = useAuth();
   const { checkAuth, logout } = useActions();
   const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     const accessToken = getAccessToken();
@@ -29,30 +30,35 @@ const AuthProvider: FC<PropsWithChildren<unknown>> = ({
     }
   }, [pathname]);
 
-  const router = useRouter()
-
   const isProtectedRoute = protectedRoutes.some(route => pathname?.startsWith(route))
-
   const isAdminRoute = pathname?.startsWith(ADMIN_PANEL_URL)
 
-  if(!isProtectedRoute && !isAdminRoute) {
+  const isDeniedAdmin = Boolean(isAdminRoute && user && !user.isAdmin)
+  const isUnauthorized = Boolean((isProtectedRoute || isAdminRoute) && !user)
+
+  useEffect(() => {
+    if (isDeniedAdmin) {
+      router.push('/')
+      return
+    }
+
+    if (isUnauthorized && pathname !== '/auth') {
+      router.replace('/auth')
+    }
+  }, [isDeniedAdmin, isUnauthorized, pathname])
+
+  if (!isProtectedRoute && !isAdminRoute) {
     return <>{children}</>
   }
 
-  if(user?.isAdmin) {
+  if (user?.isAdmin) {
     return <>{children}</>
   }
 
-  if(user && isProtectedRoute) {
+  if (user && isProtectedRoute) {
     return <>{children}</>
   }
 
-  if(user && isAdminRoute) {
-    router.push('/')
-    return <></>
-  }
-
-  pathname !== '/auth' && router.replace('/auth')
   return null
 }
 

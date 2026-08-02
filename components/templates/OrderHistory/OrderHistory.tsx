@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import SelectedCard from "./SelectedCard/SelectedCard";
 
-const SERVER_URL_FOR_IMAGE = process.env.SERVER_URL_IMAGE as string
+const SERVER_URL_FOR_IMAGE = process.env.NEXT_PUBLIC_SERVER_URL_IMAGE as string
 
 const OrderHistory = () => {
     const { user, isLoading } = useAuth();

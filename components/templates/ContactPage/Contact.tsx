@@ -1,3 +1,4 @@
+'use client'
 import { RootState } from '@/app/store/store';
 import MainLayout from "@/components/layouts/MainLayout";
 import { useSelector } from 'react-redux';

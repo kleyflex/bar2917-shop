@@ -1,9 +1,9 @@
 import axios from "axios";
 import { getAccessToken, removeFromStorage } from "../services/auth/auth.helper";
 import { AuthService } from "../services/auth/auth.service";
-import { errorCatch, getContentType } from "./api.helper";
+import { getContentType } from "./api.helper";
 
-const API_SERVER_URL = process.env.SERVER_URL;
+const API_SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
 export const instance = axios.create({
     baseURL: API_SERVER_URL,
@@ -16,33 +16,36 @@ instance.interceptors.request.use(config => {
     if(config && config.headers && accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`
     }
-    
+
     return config
 })
 
+// Первый 401 запускает обновление, остальные ждут тот же промис
+let refreshPromise: Promise<unknown> | null = null;
+
 instance.interceptors.response.use(
-    config => config, 
+    config => config,
     async error => {
         const originalRequest = error.config
 
-        if ((
-            error.response?.status === 401 ||
-            errorCatch(error) === 'jwt expired' ||
-            errorCatch(error) === 'jwt must be provided'
-          ) &&
+        if (
+            error.response?.status === 401 &&
             error.config &&
             !error.config._isRetry
-          ) {
+        ) {
             originalRequest._isRetry = true
             try {
-              await AuthService.getNewTokens()
-              return instance.request(originalRequest);
-            } catch (error) {
-              if (errorCatch(error) === 'jwt expired') {
+                if (!refreshPromise) {
+                    refreshPromise = AuthService.getNewTokens().finally(() => {
+                        refreshPromise = null
+                    })
+                }
+                await refreshPromise
+                return instance.request(originalRequest);
+            } catch {
                 removeFromStorage()
-              }
             }
-          }
-          
+        }
+
         throw error;
 })

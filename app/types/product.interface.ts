@@ -14,6 +14,30 @@ export interface IProduct {
     createdAt?: string
 }
 
+export interface IProductLocationInfo {
+    price: number
+    isAvailable: boolean
+    location?: {
+        id: number
+        name: string | null
+        address: string
+    }
+}
+
+// Товар с ценами по всем локациям
+export interface IProductFull {
+    id: number
+    name: string
+    slug: string
+    description: string
+    weight: number
+    image: string
+    isActive: boolean
+    category: ICategory
+    locations: IProductLocationInfo[]
+    createdAt?: string
+}
+
 export interface IProductDetails {
     product: IProduct
 }

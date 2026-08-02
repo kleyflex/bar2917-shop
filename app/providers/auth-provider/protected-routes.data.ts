@@ -1,1 +1,1 @@
-export const protectedRoutes = ['/my-orders']
+export const protectedRoutes = ['/users/profile', '/order-history']

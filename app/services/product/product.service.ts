@@ -1,8 +1,22 @@
 import { instance } from "@/app/api/api.interceptor"
-import { store } from "@/app/store/store"
-import { IProduct, TypeProducts } from "@/app/types/product.interface"
+import { IProduct, IProductFull, TypeProducts } from "@/app/types/product.interface"
 import { LocationService } from "../location.service"
 import { PRODUCTS, TypeProductData, TypeProductDataFilters } from "./product.types"
+
+// Приводит ответ API (цены по всем локациям) к IProduct с ценой выбранной локации
+const toProductWithPrice = (product: IProductFull, locationId: number | null): IProduct => {
+  const locationInfo = (locationId
+    ? product.locations.find(item => item.location?.id === locationId)
+    : undefined) ?? product.locations[0];
+
+  const { locations, isActive, ...rest } = product;
+
+  return {
+    ...rest,
+    price: locationInfo?.price ?? 0,
+    isAvailable: locationInfo?.isAvailable ?? false
+  };
+}
 
 export const ProductService = {
   async getAll(queryData = {} as TypeProductDataFilters) {
@@ -23,45 +37,15 @@ export const ProductService = {
     });
   },
   
-  async getBySlug(slug: string) {
-    try {
-      // Получаем текущую локацию из store
-      const { locations, selectedLocationId } = store.getState().location;
+  async getBySlug(slug: string): Promise<IProduct> {
+    const response = await instance<IProductFull>({
+      url: `${PRODUCTS}/by-slug/${slug}`,
+      method: 'GET'
+    });
 
-      if (!locations.length) {
-        throw new Error('No locations available');
-      }
+    const locationId = await LocationService.getLocationId().catch(() => null);
 
-      // Находим выбранную локацию
-      const targetLocation = selectedLocationId 
-        ? locations.find(loc => loc.id === selectedLocationId)
-        : locations.find(loc => loc.isDefault && loc.isActive) || locations.find(loc => loc.isActive);
-
-      if (!targetLocation) {
-        throw new Error('No active locations found');
-      }
-
-      // Ищем продукт в локации
-      const locationProduct = targetLocation.products.find(item => item.product.slug === slug);
-      
-      if (!locationProduct) {
-        throw new Error('Product not found');
-      }
-
-      // Возвращаем в нужном формате
-      return {
-        data: {
-          data: {
-            ...locationProduct.product,
-            price: locationProduct.price,
-            isAvailable: locationProduct.isAvailable
-          }
-        }
-      };
-    } catch (error) {
-      console.error('Error fetching product:', error);
-      throw error;
-    }
+    return toProductWithPrice(response.data, locationId);
   },
 
   async getByCategory(categorySlug: string) {
@@ -73,43 +57,15 @@ export const ProductService = {
     })
   },
 
-  async getById(id: string | number) {
-    try {
-      // Получаем текущую локацию из store
-      const { locations, selectedLocationId } = store.getState().location;
+  async getById(id: string | number): Promise<IProduct> {
+    const response = await instance<IProductFull>({
+      url: `${PRODUCTS}/${id}`,
+      method: 'GET'
+    });
 
-      if (!locations.length) {
-        throw new Error('No locations available');
-      }
+    const locationId = await LocationService.getLocationId().catch(() => null);
 
-      // Находим выбранную локацию
-      const targetLocation = selectedLocationId 
-        ? locations.find(loc => loc.id === selectedLocationId)
-        : locations.find(loc => loc.isDefault && loc.isActive) || locations.find(loc => loc.isActive);
-
-      if (!targetLocation) {
-        throw new Error('No active locations found');
-      }
-
-      // Ищем продукт в локации
-      const locationProduct = targetLocation.products.find(item => item.product.id === Number(id));
-      
-      if (!locationProduct) {
-        throw new Error('Product not found');
-      }
-
-      // Возвращаем в нужном формате
-      return {
-        data: {
-          ...locationProduct.product,
-          price: locationProduct.price,
-          isAvailable: locationProduct.isAvailable
-        }
-      };
-    } catch (error) {
-      console.error('Error fetching product:', error);
-      throw error;
-    }
+    return toProductWithPrice(response.data, locationId);
   },
 
   async create() {
