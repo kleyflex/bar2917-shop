@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { PropsWithChildren } from 'react';
 import './globalStyles/adaptation.css';
-import './globalStyles/auth.css';
 import './globalStyles/cart-popup.css';
 import './globalStyles/contacts.css';
 import './globalStyles/delivery-info.css';

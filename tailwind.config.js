@@ -25,7 +25,6 @@ module.exports = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
-    "./node_modules/@premieroctet/next-admin/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     colors,
@@ -57,6 +56,5 @@ module.exports = {
   },
   darkMode: 'class',
   plugins: [nextui()],
-  presets: [require("@premieroctet/next-admin/dist/preset")]
 }
 
