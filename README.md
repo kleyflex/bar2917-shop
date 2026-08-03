@@ -12,10 +12,10 @@
 ## Запуск
 
 ```bash
-npm install
+yarn install
 cp env.example .env   # указать адреса API и сайта
-npm run dev           # http://localhost:3000
-npm run build && npm run start   # прод
+yarn dev              # http://localhost:3000
+yarn build && yarn start   # прод
 ```
 
 ## Структура
