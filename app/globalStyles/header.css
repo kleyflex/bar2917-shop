@@ -103,6 +103,7 @@ span {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  gap: 24px;
   width: 100%;
   max-width: 350px;
 }

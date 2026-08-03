@@ -1,13 +1,11 @@
 'use client'
 import { UserService } from "@/app/services/user.service";
 import { useActions } from "@/components/hocs/useActions";
-import { useAuth } from "@/components/hocs/useAuth";
 import { useProfile } from "@/components/hocs/useProfile";
 import Loader from "@/components/ui/Loader";
 import ButtonCustom from "@/components/ui/button/ButtonCustom";
 import { Input, Link } from "@nextui-org/react";
 import { useMutation } from "@tanstack/react-query";
-import { useEffect } from 'react';
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { FaHistory } from "react-icons/fa";
@@ -20,28 +18,22 @@ interface IProfileForm {
 }
 
 const ProfilePage = () => {
-    const { profile } = useProfile();
-    const { isLoading } = useAuth();
+    const { profile, isLoading } = useProfile();
     const { logout } = useActions();
 
     const {
-        register,
         control,
         handleSubmit,
-        reset,
         setError,
         formState: { errors }
     } = useForm<IProfileForm>({
-        defaultValues: { name: '', phone: '', email: '' }
-    });
-
-    useEffect(() => {
-        reset({
+        defaultValues: { name: '', phone: '', email: '' },
+        values: {
             name: profile.name || '',
             phone: profile.phone || '',
             email: profile.email || ''
-        });
-    }, [profile, reset]);
+        }
+    });
 
     const { mutate: saveProfile, isPending } = useMutation({
         mutationKey: ['update profile'],
@@ -71,14 +63,21 @@ const ProfilePage = () => {
                     <form className="rounded-lg shadow-sm" onSubmit={handleSubmit(onSubmit)}>
                         {isLoading ? (<Loader />) : (
                             <>
-                                <Input
-                                    className="input-custom mb-3"
-                                    type="text"
-                                    label="Ваше имя"
-                                    size="md"
-                                    isInvalid={!!errors.name}
-                                    errorMessage={errors.name?.message}
-                                    {...register('name', { required: 'Введите ваше имя' })}
+                                <Controller
+                                    name="name"
+                                    control={control}
+                                    rules={{ required: 'Введите ваше имя' }}
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            className="input-custom mb-3"
+                                            type="text"
+                                            label="Ваше имя"
+                                            size="md"
+                                            isInvalid={!!errors.name}
+                                            errorMessage={errors.name?.message}
+                                        />
+                                    )}
                                 />
 
                                 <Controller
@@ -104,13 +103,19 @@ const ProfilePage = () => {
                                     )}
                                 />
 
-                                <Input
-                                    className="input-custom mb-3"
-                                    type="text"
-                                    label="Почта"
-                                    size="md"
-                                    isReadOnly
-                                    {...register('email')}
+                                <Controller
+                                    name="email"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            className="input-custom mb-3"
+                                            type="text"
+                                            label="Почта"
+                                            size="md"
+                                            isReadOnly
+                                        />
+                                    )}
                                 />
 
                                 <ButtonCustom type="submit" disabled={isPending}>
@@ -120,7 +125,7 @@ const ProfilePage = () => {
                         )}
                     </form>
                     <button
-                        className="mt-6 text-sm text-gray-400 transition duration-300 hover:text-white"
+                        className="mt-6 self-start text-sm text-gray-400 transition duration-300 hover:text-white"
                         type="button"
                         onClick={logout}
                     >

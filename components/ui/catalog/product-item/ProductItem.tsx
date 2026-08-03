@@ -33,9 +33,6 @@ const ProductItem: FC<{product: IProduct}> = ({product}) => {
             <div className="flex-col flex-grow">
                 <p className="mt-2 leading-4 line-clamp-2">{product.description}</p>
                 <div className="flex-grow"></div>
-                {!!product.price && (
-                    <span className="mt-2 text-lg text-white font-medium">{product.price} ₽</span>
-                )}
                 <div className="flex-row justify-center mt-auto">
                     <AddToCartButton product={product}></AddToCartButton>
                 </div>

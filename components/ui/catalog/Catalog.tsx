@@ -1,12 +1,13 @@
 'use client'
 import { IProduct } from "@/app/types/product.interface";
+import { Input, Select, SelectItem } from "@nextui-org/react";
 import { FC, useMemo, useState } from "react";
+import { FiSearch } from "react-icons/fi";
 import EmptyState from "../EmptyState";
 import ProductItem from "./product-item/ProductItem";
 
 interface ICatalog {
     products: IProduct[]
-    // Управление скрывается там, где каталог показывается подборкой
     withControls?: boolean
 }
 
@@ -33,7 +34,6 @@ const Catalog: FC<ICatalog> = ({ products = [], withControls = true }) => {
               )
             : products
 
-        // Копия массива: сортировка на месте мутировала бы пропсы
         const sorted = [...filtered]
 
         if (sort === 'price-asc') sorted.sort((a, b) => (a.price ?? 0) - (b.price ?? 0))
@@ -47,24 +47,47 @@ const Catalog: FC<ICatalog> = ({ products = [], withControls = true }) => {
         <section>
             {withControls && products.length > 0 && (
                 <div className="flex flex-col sm:flex-row gap-3 mb-5">
-                    <input
-                        type="search"
-                        value={search}
-                        onChange={event => setSearch(event.target.value)}
-                        placeholder="Поиск по названию или составу"
+                    <Input
                         aria-label="Поиск по каталогу"
-                        className="w-full sm:max-w-sm h-11 px-3 rounded-lg bg-background-card border border-card-border text-white placeholder:text-gray-500 focus:border-mainprimary outline-none transition-colors"
+                        placeholder="Поиск по названию или составу"
+                        value={search}
+                        onValueChange={setSearch}
+                        isClearable
+                        size="sm"
+                        radius="sm"
+                        variant="bordered"
+                        startContent={<FiSearch className="text-gray-500 shrink-0" />}
+                        className="input-custom w-full sm:max-w-sm"
+                        classNames={{
+                            inputWrapper: "h-11 bg-background-card border-card-border data-[hover=true]:border-mainprimary group-data-[focus=true]:border-mainprimary",
+                            input: "text-white placeholder:text-gray-500"
+                        }}
                     />
-                    <select
-                        value={sort}
-                        onChange={event => setSort(event.target.value as TypeSort)}
+                    <Select
                         aria-label="Сортировка товаров"
-                        className="w-full sm:w-56 h-11 px-3 rounded-lg bg-background-card border border-card-border text-white focus:border-mainprimary outline-none transition-colors"
+                        selectedKeys={[sort]}
+                        onSelectionChange={keys => setSort(Array.from(keys)[0] as TypeSort)}
+                        disallowEmptySelection
+                        size="sm"
+                        radius="sm"
+                        variant="bordered"
+                        className="select-custom w-full sm:w-56"
+                        classNames={{
+                            trigger: "h-11 bg-background-card border-card-border data-[hover=true]:border-mainprimary data-[open=true]:border-mainprimary",
+                            value: "text-white",
+                            popoverContent: "select-custom__popover bg-background-card border border-card-border"
+                        }}
                     >
                         {SORT_OPTIONS.map(option => (
-                            <option key={option.value} value={option.value}>{option.label}</option>
+                            <SelectItem
+                                key={option.value}
+                                value={option.value}
+                                className="selectitem-span text-white data-[hover=true]:bg-background-input data-[selected=true]:bg-mainprimary"
+                            >
+                                {option.label}
+                            </SelectItem>
                         ))}
-                    </select>
+                    </Select>
                 </div>
             )}
 

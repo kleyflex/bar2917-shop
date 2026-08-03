@@ -109,7 +109,7 @@ const AuthForm = ({ onSuccess }: IAuthForm) => {
                 </div>
             )}
 
-            <ButtonCustom type="submit" disabled={isLoading}>
+            <ButtonCustom type="submit" className="btn__block" disabled={isLoading}>
                 {isLoading
                     ? 'Подождите…'
                     : type === 'login' ? 'Войти' : 'Зарегистрироваться'}

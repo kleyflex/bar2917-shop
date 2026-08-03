@@ -42,8 +42,8 @@ const AuthProvider: FC<PropsWithChildren<unknown>> = ({
       return
     }
 
-    if (isUnauthorized && pathname !== '/auth') {
-      router.replace('/auth')
+    if (isUnauthorized && pathname !== '/') {
+      router.replace('/')
     }
   }, [isDeniedAdmin, isUnauthorized, pathname])
 

@@ -78,9 +78,10 @@
   height: 150px;
   margin-top: 75px;
   display: flex;
-  align-items: self-end;
-  padding-left: 20px;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 8px;
   background-image: url('/img/empty-cart.svg');
   background-repeat: no-repeat;
   background-position: center center;
