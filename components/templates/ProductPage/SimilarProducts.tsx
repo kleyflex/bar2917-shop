@@ -14,7 +14,6 @@ export default function SimilarProducts({ similarProducts }: ISimilarProducts) {
   
   const getRandomProducts = (products: IProduct[], max: number) => {
     // Перемешиваем массив продуктов
-    // Копия: sort на месте мутировал бы пропсы
     const shuffled = [...products].sort(() => 0.5 - Math.random());
     // Возвращаем максимум `max` продуктов
     return shuffled.slice(0, max);
