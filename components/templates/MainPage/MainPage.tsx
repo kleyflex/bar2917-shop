@@ -5,7 +5,9 @@ import { setLocations } from '@/app/store/location/location.slice';
 import { TypeRootState } from '@/app/store/store';
 import MainLayout from '@/components/layouts/MainLayout';
 import Hero from '@/components/modules/MainPage/Hero/Hero';
+import EmptyState from '@/components/ui/EmptyState';
 import CatalogMain from '@/components/ui/catalog/CatalogMain';
+import CatalogSkeleton from '@/components/ui/catalog/CatalogSkeleton';
 import LocationSelectorHero from '@/components/ui/location/LocationSelectorHero';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
@@ -30,7 +32,7 @@ const MainPage = () => {
   }, [locationsData, dispatch]);
 
   // Загружаем продукты
-  const { data: productsData, isLoading, error } = useQuery({
+  const { data: productsData, isLoading, error, refetch } = useQuery({
     queryKey: ['main-products', selectedLocationId],
     queryFn: async () => {
       const result = await LocationService.getLocationWithProducts();
@@ -39,14 +41,39 @@ const MainPage = () => {
     enabled: !!locations.length,
   });
 
+  // Пока локации не пришли, запрос товаров ещё даже не стартовал —
+  // это тоже загрузка, а не «товаров нет»
+  const isCatalogLoading = isLoading || !locations.length;
+
   return (
     <MainLayout>
       <LocationSelectorHero />
       <Hero />
-      <CatalogMain
-        title="Популярное"
-        products={productsData?.products || []}
-      />
+      {isCatalogLoading ? (
+        <section className="media-768">
+          <h1>Популярное</h1>
+          <CatalogSkeleton count={8} />
+        </section>
+      ) : error ? (
+        <EmptyState
+          title="Не удалось загрузить меню"
+          description="Проверьте соединение и попробуйте ещё раз."
+          action={
+            <button
+              type="button"
+              onClick={() => refetch()}
+              className="px-4 h-10 rounded-lg bg-mainprimary text-white hover:opacity-90 transition-opacity"
+            >
+              Повторить
+            </button>
+          }
+        />
+      ) : (
+        <CatalogMain
+          title="Популярное"
+          products={productsData?.products || []}
+        />
+      )}
     </MainLayout>
   );
 };

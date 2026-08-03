@@ -258,6 +258,18 @@ h1 {
     margin-top: 20px !important;
 }
 
+/* Место под баннер резервируется до загрузки картинок,
+   иначе карусель «вырастает» и толкает каталог вниз */
+.hero .swiper {
+  aspect-ratio: 1162 / 326;
+}
+
+@media (max-width: 480px) {
+  .hero .swiper {
+    aspect-ratio: 345 / 111;
+  }
+}
+
 /* Location Selector Hero Styles */
 .location-selector-hero {
   background: linear-gradient(135deg, rgba(255, 138, 0, 0.08) 0%, rgba(255, 138, 0, 0.03) 100%);

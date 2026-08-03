@@ -86,8 +86,14 @@ export default function LocationSelectorHero() {
     });
   };
 
+  // Заглушка той же высоты, что и готовый блок: раньше здесь был return null,
+  // и появление карточки толкало весь контент вниз
   if (isLoading && locations.length === 0) {
-    return null;
+    return (
+      <div className="w-full py-3 px-4 sm:px-0" aria-hidden="true">
+        <div className="location-selector-hero rounded-large h-[166px] sm:h-[73px] animate-pulse" />
+      </div>
+    );
   }
 
   const selectedLocation = locations.find(loc => loc.id === selectedLocationId);
