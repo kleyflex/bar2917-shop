@@ -1,19 +1,23 @@
-import { FolderNameForImage } from "@/app/constants/app.constants"
+import { getImageUrl } from "@/app/helpers/image"
 import { IProduct } from "@/app/types/product.interface"
 import Image from "next/image"
 import Link from "next/link"
 import { FC } from "react"
 import AddToCartButton from "./AddToCartButton"
 
-const SERVER_URL_FOR_IMAGE = process.env.NEXT_PUBLIC_SERVER_URL_IMAGE as string
-
 const ProductItem: FC<{product: IProduct}> = ({product}) => {
-    const imageUrl = `${SERVER_URL_FOR_IMAGE}/${FolderNameForImage}/${product.image}`
     return (
         <div className="bg-background-card card__template border-1 border-card-border rounded-lg animate-scaleIn flex flex-col">
             <Link href={`/product/${product.slug}`}>
                 <div className="product__item__card__image">
-                        <Image width={262} height={180} src={imageUrl} alt={product.name} className="card__img rounded-lg"/>
+                    <Image
+                        width={262}
+                        height={180}
+                        sizes="(max-width: 480px) 45vw, (max-width: 768px) 40vw, 270px"
+                        src={getImageUrl(product.image)}
+                        alt={product.name}
+                        className="card__img rounded-lg"
+                    />
                 </div>
             </Link>
             <div className="flex-row justify-between mt-3.5 items-baseline media-480">
@@ -29,12 +33,13 @@ const ProductItem: FC<{product: IProduct}> = ({product}) => {
             <div className="flex-col flex-grow">
                 <p className="mt-2 leading-4 line-clamp-2">{product.description}</p>
                 <div className="flex-grow"></div>
+                {!!product.price && (
+                    <span className="mt-2 text-lg text-white font-medium">{product.price} ₽</span>
+                )}
                 <div className="flex-row justify-center mt-auto">
                     <AddToCartButton product={product}></AddToCartButton>
                 </div>
             </div>
-            {/* <p>{product.price}</p> */}
-            
         </div>
     )
 }

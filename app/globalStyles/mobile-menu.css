@@ -43,7 +43,7 @@
 
 .mobile-menu__item:hover,
 .mobile-menu__item:active {
-  background-color: #FF8A00;
+  background-color: var(--color-primary);
 }
 
 .mobile-menu__icon {

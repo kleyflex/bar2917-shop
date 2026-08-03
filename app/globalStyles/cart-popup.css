@@ -27,7 +27,7 @@
 }
 
 .cart-popup__close:hover {
-  background-color: #ff8a00 !important;
+  background-color: var(--color-primary) !important;
   transition: background-color 0.2s ease-in-out;
 }
 
@@ -65,7 +65,7 @@
 }
 
 .cart-popup__cart-list::-webkit-scrollbar-thumb {
-  background-color: #ff8a00;
+  background-color: var(--color-primary);
   border-radius: 3px;
 }
 
@@ -155,7 +155,7 @@
 }
 
 .cart-list__item__title:hover {
-  color: #ff8a00;
+  color: var(--color-primary);
   transition: color 0.2s ease-in-out;
 }
 

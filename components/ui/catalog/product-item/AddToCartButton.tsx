@@ -1,71 +1,43 @@
+'use client'
 import { IProduct } from "@/app/types/product.interface";
-import { useActions } from "@/components/hocs/useActions";
-import { useCart } from "@/components/hocs/useCart";
+import { useCartStepper } from "@/components/hocs/useCartStepper";
 import ButtonCustom from "@/components/ui/button/ButtonCustom";
 import { FC } from "react";
-import toast from "react-hot-toast";
 import { FaPlus } from "react-icons/fa6";
 import { FiMinus } from "react-icons/fi";
 
 const AddToCartButton: FC<{ product: IProduct }> = ({ product }) => {
-    const { addToCart, removeFromCart, changeQuantity } = useActions();
-    const { items } = useCart();
-
-    const currentElement = items.find(
-        cartItem => cartItem.product.id === product.id
-    );
+    const { currentElement, quantity, isMaxReached, add, increase, decrease } = useCartStepper(product);
 
     return (
         <div className="w-full">
             {currentElement ? (
                 <div className="flex-row items-center justify-between">
                     <ButtonCustom
-                        className="btn__default btn__card product__item__card__button left"
-                        onClick={() => {
-                            if (currentElement.quantity === 1) {
-                                removeFromCart({ id: currentElement.id });
-                            } else {
-                                changeQuantity({
-                                    id: currentElement.id,
-                                    type: "minus",
-                                });
-                            }
-                        }}
+                        className="btn__card product__item__card__button left"
+                        aria-label="Уменьшить количество"
+                        onClick={decrease}
                     >
                         <FiMinus fontSize={13} />
                     </ButtonCustom>
                     <div className="w-52 bg-background-button-card h-12 justify-center mobile-btn">
                         <span className="text-white font-normal">
-                            {currentElement.quantity} x {product.price} ₽
+                            {quantity} x {product.price} ₽
                         </span>
                     </div>
                     <ButtonCustom
-                        className="btn__default btn__card product__item__card__button right"
-                        onClick={() => {
-                            if (currentElement.quantity < 50) {
-                                changeQuantity({
-                                    id: currentElement.id,
-                                    type: "plus",
-                                });
-                            } else {
-                                toast.error("Максимальное количество — 50");
-                            }
-                        }}
-                        disabled={currentElement.quantity >= 51}
+                        className="btn__card product__item__card__button right"
+                        aria-label="Увеличить количество"
+                        onClick={increase}
+                        disabled={isMaxReached}
                     >
                         <FaPlus />
                     </ButtonCustom>
                 </div>
             ) : (
                 <ButtonCustom
-                    className="btn__default btn__card product__item__card__button"
-                    onClick={() =>
-                        addToCart({
-                            product,
-                            quantity: 1,
-                            price: product.price,
-                        })
-                    }
+                    className="btn__card product__item__card__button"
+                    onClick={add}
                 >
                     <div className="flex-row items-center justify-center gap-2 w-full">
                         <FaPlus />

@@ -33,7 +33,7 @@
 }
 
 .footer__links__item__a:hover {
-  color: #f18100;
+  color: var(--color-primary);
   transition: 0.2s ease-in-out;
 }
 
@@ -57,6 +57,6 @@
 }
 
 .footer__a__phone:hover {
-  color: #f18100;
+  color: var(--color-primary);
   transition: 0.2s ease-in-out;
 }

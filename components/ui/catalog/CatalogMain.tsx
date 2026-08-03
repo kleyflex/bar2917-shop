@@ -1,3 +1,4 @@
+import EmptyState from "../EmptyState";
 import { IProduct } from "@/app/types/product.interface";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
@@ -72,18 +73,18 @@ const CatalogMain: FC<ICatalog> = ({ products = [], title }) => {
                 >
                     <div className="flex flex-col items-center justify-center w-full h-full px-3 py-4">
                         <GiPerspectiveDiceSixFacesRandom 
-                            className="text-orange-400 group-hover:text-orange-500 transition-all duration-300 ease-in-out transform group-hover:rotate-180" 
+                            className="text-mainprimary group-hover:text-mainprimary transition-all duration-300 ease-in-out transform group-hover:rotate-180" 
                             size={60}
                         />
                         <div className="text-center mt-3 w-full">
-                            <h4 className="!text-[10px] md:!text-base lg:!text-lg font-semibold text-white mb-2">
+                            <span className="block !text-[10px] md:!text-base lg:!text-lg font-semibold text-white mb-2">
                                 Не можете выбрать?
-                            </h4>
+                            </span>
                             <p className="!text-[8px] sm:!text-sm text-gray-300 whitespace-normal break-words hyphens-auto">
                                 Нажмите для индивидуальной рекомендации
                             </p>
                         </div>
-                        <div className="absolute top-2 right-2 bg-orange-400 text-white text-xs px-2 py-1 rounded-full">
+                        <div className="absolute top-2 right-2 bg-mainprimary text-white text-xs px-2 py-1 rounded-full">
                             NEW
                         </div>
                     </div>
@@ -91,7 +92,7 @@ const CatalogMain: FC<ICatalog> = ({ products = [], title }) => {
                 {displayedProducts.length ? (
                     displayedProducts.map((product) => <ProductItem key={product.id} product={product} />)
                 ) : (
-                    <div>Здесь нет продуктов</div>
+                    <EmptyState title="Здесь пока нет товаров" />
                 )}
             </div>
         </section>

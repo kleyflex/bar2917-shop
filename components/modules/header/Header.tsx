@@ -1,18 +1,20 @@
+'use client'
 import { RootState } from '@/app/store/store';
 import { useAuth } from '@/components/hocs/useAuth';
-import { useProfile } from '@/components/hocs/useProfile';
 import LocationSelector from '@/components/ui/location/LocationSelector';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import AuthModal from '../Auth/AuthModal';
 import MobileMenu from '../MobileMenu/MobileMenu';
 import CartPopup from './CartPopup/CartPopup';
 
 const Header = () => {
   const { user } = useAuth();
-  const { profile } = useProfile();
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
   const { selectedLocationId, locations } = useSelector((state: RootState) => state.location);
-  
+
   const selectedLocation = locations.find(loc => loc.id === selectedLocationId);
   const phoneNumber = selectedLocation?.phone || '+7 (981) 156-56-67';
 
@@ -60,37 +62,44 @@ const Header = () => {
             </Link>
           </div>
           
-          <ul className='header__links'>
-          {user?.isAdmin ? (
-            <li className='header__links__item pl-5'>
-              <a href='/admin' className='header__links__item__a'>
-                Панель администратора
-              </a>
-            </li>
-          ) : (
-            <>
-              <li className='header__links__item'>
-                <a href='/contacts' className='header__links__item__a'>
-                  Контакты
-                </a>
+          <nav aria-label='Основная навигация'>
+            <ul className='header__links'>
+            {user?.isAdmin ? (
+              <li className='header__links__item pl-5'>
+                <Link href='/admin' className='header__links__item__a'>
+                  Панель администратора
+                </Link>
               </li>
-              <li className='header__links__item'>
-                <a href='/delivery-info' className='header__links__item__a'>
-                  Доставка и оплата
-                </a>
-              </li>
-            </>
-          )}
-          </ul>
+            ) : (
+              <>
+                <li className='header__links__item'>
+                  <Link href='/contacts' className='header__links__item__a'>
+                    Контакты
+                  </Link>
+                </li>
+                <li className='header__links__item'>
+                  <Link href='/delivery-info' className='header__links__item__a'>
+                    Доставка и оплата
+                  </Link>
+                </li>
+              </>
+            )}
+            </ul>
+          </nav>
           <div className='header__icon__links'>
             {user ? (
-              <Link className='header__icon__links__item' href='/users/profile'>
+              <Link className='header__icon__links__item' href='/users/profile' aria-label='Личный кабинет'>
                 <div className='header__icon__links__card__item--profile' />
               </Link>
             ) : (
-              <Link className='header__icon__links__item' href='/auth'>
+              <button
+                type='button'
+                className='header__icon__links__item'
+                aria-label='Войти в аккаунт'
+                onClick={() => setIsAuthOpen(true)}
+              >
                 <div className='header__icon__links__card__item--profile' />
-              </Link>
+              </button>
             )}
             <CartPopup />
             <div className='mobile-menu-wrapper'>
@@ -99,6 +108,7 @@ const Header = () => {
           </div>
         </div>
       </div>
+      <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
     </header>
   );
 };

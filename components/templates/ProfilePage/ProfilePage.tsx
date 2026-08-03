@@ -1,3 +1,4 @@
+'use client'
 import { UserService } from "@/app/services/user.service";
 import { useActions } from "@/components/hocs/useActions";
 import { useAuth } from "@/components/hocs/useAuth";
@@ -5,83 +6,69 @@ import { useProfile } from "@/components/hocs/useProfile";
 import Loader from "@/components/ui/Loader";
 import ButtonCustom from "@/components/ui/button/ButtonCustom";
 import { Input, Link } from "@nextui-org/react";
-import { useEffect, useState } from 'react';
+import { useMutation } from "@tanstack/react-query";
+import { useEffect } from 'react';
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { FaHistory } from "react-icons/fa";
 import InputMask from "react-input-mask-next";
 
+interface IProfileForm {
+    name: string;
+    phone: string;
+    email: string;
+}
+
 const ProfilePage = () => {
     const { profile } = useProfile();
     const { isLoading } = useAuth();
-    const [formData, setFormData] = useState({
-        name: "",
-        phone: "",
-        email: ""
+    const { logout } = useActions();
+
+    const {
+        register,
+        control,
+        handleSubmit,
+        reset,
+        setError,
+        formState: { errors }
+    } = useForm<IProfileForm>({
+        defaultValues: { name: '', phone: '', email: '' }
     });
-    const [allPhones, setAllPhones] = useState<{ id: number; phone: string }[]>([]);
 
     useEffect(() => {
-        setFormData({
-            name: profile.name || "",
-            phone: profile.phone || "",
-            email: profile.email || ""
+        reset({
+            name: profile.name || '',
+            phone: profile.phone || '',
+            email: profile.email || ''
         });
+    }, [profile, reset]);
 
-        const fetchAllPhones = async () => {
-            try {
-                const response = await UserService.getAllPhones();
-                setAllPhones(response.data);
-            } catch (error) {
-                console.error('Ошибка при получении телефонов:', error);
+    const { mutate: saveProfile, isPending } = useMutation({
+        mutationKey: ['update profile'],
+        // Уникальность телефона проверяет сервер
+        mutationFn: (data: IProfileForm) => UserService.updateProfile(data),
+        onSuccess: () => toast.success('Профиль обновлён'),
+        onError: (error: any) => {
+            const message = error?.response?.data?.message;
+            const text = Array.isArray(message) ? message.join(', ') : message;
+
+            if (typeof text === 'string' && text.toLowerCase().includes('телефон')) {
+                setError('phone', { message: text });
+            } else if (typeof text === 'string' && text.toLowerCase().includes('почт')) {
+                setError('email', { message: text });
+            } else {
+                toast.error(text || 'Не удалось обновить профиль');
             }
-        };
-        fetchAllPhones();
-    }, [profile]);
-
-    const handleChange = (e: { target: { name: string; value: string; }; }) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value
-        });
-    };
-
-    const handleSubmit = async (e: { preventDefault: () => void; }) => {
-        e.preventDefault();
-
-        // Проверяем, есть ли введенный телефон в списке всех телефонов
-        const isDuplicatePhone = allPhones.some(item => item.phone === formData.phone);
-
-        if (isDuplicatePhone) {
-            toast.error('Этот телефон уже используется');
-            return;
         }
+    });
 
-        // Проверяем, заполнено ли поле имени
-        if (!formData.name.trim()) {
-            toast.error('Пожалуйста, введите ваше имя');
-            return;
-        }
-
-        toast.promise(
-            UserService.updateProfile(formData), 
-            {
-                loading: 'Сохранение...',
-                success: 'Профиль успешно обновлен!',
-                error: 'Ошибка при обновлении профиля!'
-            }
-        ).catch((error) => {
-            console.error('Ошибка при обновлении профиля:', error);
-        });
-    };
-
-    const { logout } = useActions();
+    const onSubmit: SubmitHandler<IProfileForm> = data => saveProfile(data);
 
     return (
         <section>
-            <div className="flex-row">
-                <div className="w-1/2">
-                    <form className="h-72 rounded-lg shadow-sm" onSubmit={handleSubmit}>
+            <div className="flex flex-col md:flex-row gap-6">
+                <div className="w-full md:w-1/2">
+                    <form className="rounded-lg shadow-sm" onSubmit={handleSubmit(onSubmit)}>
                         {isLoading ? (<Loader />) : (
                             <>
                                 <Input
@@ -89,51 +76,61 @@ const ProfilePage = () => {
                                     type="text"
                                     label="Ваше имя"
                                     size="md"
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    errorMessage="Имя обязательно для заполнения"
+                                    isInvalid={!!errors.name}
+                                    errorMessage={errors.name?.message}
+                                    {...register('name', { required: 'Введите ваше имя' })}
                                 />
 
-                                <InputMask
-                                    mask="+7 (999) 999-99-99"
-                                    value={formData.phone}
-                                    onChange={handleChange}
-                                >
-                                    {
-                                        <Input
-                                            className="input-custom mb-3"
-                                            type="text"
-                                            label="Ваш телефон"
-                                            name="phone"
-                                            size="md"
-                                            errorMessage="Телефон"
-                                        />
-                                    }
-                                </InputMask>
+                                <Controller
+                                    name="phone"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <InputMask
+                                            mask="+7 (999) 999-99-99"
+                                            value={field.value}
+                                            onChange={field.onChange}
+                                        >
+                                            {
+                                                <Input
+                                                    className="input-custom mb-3"
+                                                    type="text"
+                                                    label="Ваш телефон"
+                                                    size="md"
+                                                    isInvalid={!!errors.phone}
+                                                    errorMessage={errors.phone?.message}
+                                                />
+                                            }
+                                        </InputMask>
+                                    )}
+                                />
 
                                 <Input
                                     className="input-custom mb-3"
                                     type="text"
                                     label="Почта"
-                                    name="email"
-                                    value={formData.email}
                                     size="md"
                                     isReadOnly
-                                    errorMessage="Почта"
+                                    {...register('email')}
                                 />
 
-                                <ButtonCustom type="submit">Сохранить</ButtonCustom>
+                                <ButtonCustom type="submit" disabled={isPending}>
+                                    {isPending ? 'Сохранение…' : 'Сохранить'}
+                                </ButtonCustom>
                             </>
                         )}
                     </form>
-                    <div className="w-1/4">
-                        <button className="mt-7 text-sm w-12 ml-1 transition duration-300 hover:text-background-button-card" type="button" onClick={logout}>Выйти</button>
-                    </div>
+                    <button
+                        className="mt-6 text-sm text-gray-400 transition duration-300 hover:text-white"
+                        type="button"
+                        onClick={logout}
+                    >
+                        Выйти
+                    </button>
                 </div>
-                <div className="w-1/2">
+
+                <div className="w-full md:w-1/2">
                     <Link href="/order-history">
-                        <div className="w-52 h-40 rounded-lg shadow-sm bg-background-card ml-10 border border-background-button-card p-5 justify-between">
+                        <div className="w-full max-w-[220px] h-40 rounded-lg shadow-sm bg-background-card border border-background-button-card p-5 justify-between">
                             <h3 className="text-xl font-semibold text-white">История заказов</h3>
                             <FaHistory size={25} color="white" />
                         </div>

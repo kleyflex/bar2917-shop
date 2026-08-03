@@ -5,8 +5,8 @@ import { CategoryService } from '@/app/services/category.service';
 import { IProductsByLocation, LocationService } from '@/app/services/location.service';
 import { RootState } from '@/app/store/store';
 import MainLayout from '@/components/layouts/MainLayout';
-import Loader from '@/components/ui/Loader';
-import { Card, CardBody } from "@nextui-org/card";
+import EmptyState from '@/components/ui/EmptyState';
+import CatalogSkeleton from '@/components/ui/catalog/CatalogSkeleton';
 import { Tab, Tabs } from '@nextui-org/tabs';
 import { useQuery } from '@tanstack/react-query';
 import dynamic from 'next/dynamic';
@@ -29,7 +29,7 @@ export default function CategoryPageClient({ slug }: ICategoryPageClient) {
     enabled: !!slug
   });
 
-  const { data: productsData, isLoading: productsLoading } = useQuery<IProductsByLocation>({
+  const { data: productsData, isLoading: productsLoading, error: productsError, refetch } = useQuery<IProductsByLocation>({
     queryKey: ['category-products', slug, selectedLocationId],
     queryFn: () => LocationService.getProductsByCategory(slug),
     enabled: !!slug && !!selectedLocationId,
@@ -47,29 +47,36 @@ export default function CategoryPageClient({ slug }: ICategoryPageClient) {
     products.filter(product => product.image.includes('baked'))
     : products;
 
-  const EmptyStateMessage = () => (
-    <Card className="max-w-[600px] mx-auto my-8">
-      <CardBody className="text-center py-8 gap-3">
-        <h3 className="text-xl font-semibold mb-4">
-          К сожалению, в данном ресторане мы не готовим блюда из данной категории
-        </h3>
-        <p className="text-gray-500 leading-5">
-          Пожалуйста, выберите другую категорию или выберите один из наших других ресторанов
-        </p>
-      </CardBody>
-    </Card>
-  );
-
   if (categoryLoading || productsLoading) {
     return (
       <MainLayout>
-        <Loader />
+        <CatalogSkeleton />
       </MainLayout>
     );
   }
 
   if (categoryError || !category) {
     return <NotFound />;
+  }
+
+  if (productsError) {
+    return (
+      <MainLayout>
+        <EmptyState
+          title="Не удалось загрузить товары"
+          description="Проверьте соединение и попробуйте ещё раз."
+          action={
+            <button
+              type="button"
+              onClick={() => refetch()}
+              className="px-4 h-10 rounded-lg bg-mainprimary text-white hover:opacity-90 transition-opacity"
+            >
+              Повторить
+            </button>
+          }
+        />
+      </MainLayout>
+    );
   }
 
   return (
@@ -86,7 +93,7 @@ export default function CategoryPageClient({ slug }: ICategoryPageClient) {
                 classNames={{
                   tabList: "flex-row",
                   tab: "text-[10px] sm:text-sm",
-                  cursor: "bg-orange-500",
+                  cursor: "bg-mainprimary",
                   tabContent: "py-0 group-data-[selected=true]:text-white",
                 }}
                 size="sm"
@@ -103,7 +110,10 @@ export default function CategoryPageClient({ slug }: ICategoryPageClient) {
         {filteredProducts.length > 0 ? (
           <Catalog products={filteredProducts} />
         ) : (
-          <EmptyStateMessage />
+          <EmptyState
+            title="В этом ресторане нет блюд из этой категории"
+            description="Выберите другую категорию или другой ресторан."
+          />
         )}
       </MainLayout>
     </main>

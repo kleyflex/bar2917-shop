@@ -36,7 +36,7 @@
 .sidebar__menu__item:hover {
   transition: .2s ease-in-out;
   background-color: #ff880009;
-  border: 1px solid #ff8a00;
+  border: 1px solid var(--color-primary);
 }
 
 .sidebar__menu__item__div {

@@ -1,17 +1,19 @@
 'use client';
 
+import { ORDERS_ENABLED } from '@/app/config/features';
 import { useAuth } from '@/components/hocs/useAuth';
+import AuthModal from '@/components/modules/Auth/AuthModal';
 import { Button, Modal, ModalBody, ModalContent } from '@nextui-org/react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { FiMoreHorizontal, FiShoppingCart, FiUser } from 'react-icons/fi';
 import { IoClose } from 'react-icons/io5';
 
 const MobileNav = () => {
   const { user } = useAuth();
-  const pathname = usePathname();
   const [moreOpen, setMoreOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
 
   const handleOpenMore = () => {
     setMoreOpen(true);
@@ -23,25 +25,42 @@ const MobileNav = () => {
 
   return (
     <>
-      <div className="mobile-bottom-nav">
-        {/* Профиль */}
-        <Link href={user ? '/users/profile' : '/auth'} className="mobile-nav-item">
-          <FiUser className="mobile-nav-icon" />
-          <span className="mobile-nav-text">Профиль</span>
-        </Link>
+      <nav className="mobile-bottom-nav" aria-label="Нижняя навигация">
+        {user ? (
+          <Link href="/users/profile" className="mobile-nav-item">
+            <FiUser className="mobile-nav-icon" />
+            <span className="mobile-nav-text">Профиль</span>
+          </Link>
+        ) : (
+          <button type="button" onClick={() => setAuthOpen(true)} className="mobile-nav-item">
+            <FiUser className="mobile-nav-icon" />
+            <span className="mobile-nav-text">Профиль</span>
+          </button>
+        )}
 
-        {/* Корзина - поменяли местами с "Еще" */}
-        <Link href={user ? '/order' : '/auth'} className="mobile-nav-item">
-          <FiShoppingCart className="mobile-nav-icon" />
-          <span className="mobile-nav-text">Корзина</span>
-        </Link>
+        {ORDERS_ENABLED ? (
+          <Link href={user ? '/order' : '/auth'} className="mobile-nav-item">
+            <FiShoppingCart className="mobile-nav-icon" />
+            <span className="mobile-nav-text">Корзина</span>
+          </Link>
+        ) : (
+          <button
+            type="button"
+            className="mobile-nav-item"
+            onClick={() => toast('Онлайн-оформление временно недоступно. Позвоните нам, чтобы сделать заказ.')}
+          >
+            <FiShoppingCart className="mobile-nav-icon" />
+            <span className="mobile-nav-text">Корзина</span>
+          </button>
+        )}
 
-        {/* Еще - поменяли местами с "Корзина" */}
-        <button onClick={handleOpenMore} className="mobile-nav-item">
+        <button type="button" onClick={handleOpenMore} className="mobile-nav-item">
           <FiMoreHorizontal className="mobile-nav-icon" />
           <span className="mobile-nav-text">Еще</span>
         </button>
-      </div>
+      </nav>
+
+      <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
 
       {/* Модальное окно "Еще" */}
       <Modal 

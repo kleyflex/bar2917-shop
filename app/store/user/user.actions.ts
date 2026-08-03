@@ -11,11 +11,10 @@ export const register = createAsyncThunk<IAuthResponse, IEmailPassword>(
     async (data, thunkApi) => {
       try {
         const response = await AuthService.main('register', data)
-        toast.success('Регистрация прошла успешна!');
+        toast.success('Регистрация прошла успешно');
         return response
       } catch (error) {
-        toast.error('Такой пользователь уже существует');
-        return thunkApi.rejectWithValue(error)
+        return thunkApi.rejectWithValue(errorCatch(error) || 'Не удалось зарегистрироваться')
       }
     }
   )
@@ -26,11 +25,10 @@ export const login = createAsyncThunk<IAuthResponse, IEmailPassword>(
     async (data, thunkApi) => {
       try {
         const response = await AuthService.main('login', data)
-        toast.success('Авторизация прошла успешна!');
+        toast.success('Вы вошли в аккаунт');
         return response
       } catch (error) {
-        toast.error('Неверная почта или пароль');
-        return thunkApi.rejectWithValue(error)
+        return thunkApi.rejectWithValue(errorCatch(error) || 'Не удалось войти')
       }
     }
   )

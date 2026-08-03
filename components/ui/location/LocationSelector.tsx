@@ -99,7 +99,7 @@ export default function LocationSelector() {
     <>
       <button 
         onClick={onOpen}
-        className="flex items-center gap-1 text-white hover:text-orange-500 transition-colors"
+        className="flex items-center gap-1 text-white hover:text-mainprimary transition-colors"
       >
         <span className="font-medium">
           {selectedLocation?.name || 'Выберите адрес'}
@@ -135,7 +135,7 @@ export default function LocationSelector() {
                   key={location.id}
                   className={`w-full h-auto ${isMobile ? "p-1.5 min-h-0" : "p-4"} ${
                     selectedLocationId === location.id 
-                      ? 'bg-orange-500 text-white hover:bg-orange-600' 
+                      ? 'bg-mainprimary text-white hover:bg-orange-600' 
                       : 'bg-[#2D2D2D]/90 text-white hover:bg-[#3D3D3D]'
                   } transition-colors duration-200`}
                   onClick={() => handleLocationChange(location.id)}
@@ -145,7 +145,7 @@ export default function LocationSelector() {
                       <MapPin className={`${isMobile ? "w-3 h-3" : "w-5 h-5"} ${
                         selectedLocationId === location.id 
                           ? 'text-white' 
-                          : 'text-orange-500'
+                          : 'text-mainprimary'
                       }`} />
                     </div>
                     <div className="flex flex-col items-start gap-0.5 flex-grow overflow-hidden text-left w-full">

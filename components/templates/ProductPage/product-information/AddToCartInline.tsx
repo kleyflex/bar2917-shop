@@ -1,9 +1,9 @@
+'use client'
 import { IProduct } from "@/app/types/product.interface";
-import { useActions } from "@/components/hocs/useActions";
-import { useCart } from "@/components/hocs/useCart";
+import { useCartStepper } from "@/components/hocs/useCartStepper";
+import { useIsMobile } from "@/components/hocs/useIsMobile";
 import ButtonCustom from "@/components/ui/button/ButtonCustom";
-import { FC, useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { FC } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { FiMinus } from "react-icons/fi";
 
@@ -13,80 +13,36 @@ interface AddToCartInlineProps {
 }
 
 const AddToCartInline: FC<AddToCartInlineProps> = ({ product, alignRight = false }) => {
-    const [isMobile, setIsMobile] = useState(false);
-
-    useEffect(() => {
-        const checkIsMobile = () => {
-            setIsMobile(window.innerWidth < 480);
-        };
-        
-        // Проверяем при загрузке
-        checkIsMobile();
-        
-        // Слушаем изменение размера экрана
-        window.addEventListener('resize', checkIsMobile);
-        
-        return () => {
-            window.removeEventListener('resize', checkIsMobile);
-        };
-    }, []);
-
-    const { addToCart, removeFromCart, changeQuantity } = useActions();
-    const { items } = useCart();
-
-    const currentElement = items.find(
-        cartItem => cartItem.product.id === product.id
-    );
+    const isMobile = useIsMobile(480);
+    const { currentElement, quantity, isMaxReached, add, increase, decrease } = useCartStepper(product);
 
     return (
         <div className={`${isMobile ? 'w-full' : ''} ${alignRight ? 'flex justify-end' : ''}`}>
             {currentElement ? (
-                <div className={`flex-row items-center  ${isMobile ? 'justify-center' : 'justify-between'}`}>
+                <div className={`flex-row items-center ${isMobile ? 'justify-center' : 'justify-between'}`}>
                     <ButtonCustom
-                        className="btn__default btn__card product__item__card__button left h-mobile-card"
-                        onClick={() => {
-                            if (currentElement.quantity === 1) {
-                                removeFromCart({ id: currentElement.id });
-                            } else {
-                                changeQuantity({
-                                    id: currentElement.id,
-                                    type: 'minus'
-                                });
-                            }
-                        }}
+                        className="btn__card product__item__card__button left h-mobile-card"
+                        aria-label="Уменьшить количество"
+                        onClick={decrease}
                     >
                         <FiMinus fontSize={13} />
                     </ButtonCustom>
                     <span className={`text-white font-normal ${isMobile ? 'w-64 text-center h-mobile-card text-xs' : 'w-60 text-center h-full'} bg-background-button-card flex justify-center items-center`}>
-                        {currentElement.quantity} x {product.price} ₽
+                        {quantity} x {product.price} ₽
                     </span>
                     <ButtonCustom
-                        className="btn__default btn__card product__item__card__button right h-mobile-card"
-                        onClick={() => {
-                            if (currentElement.quantity < 50) {
-                                changeQuantity({
-                                    id: currentElement.id,
-                                    type: "plus",
-                                });
-                            } else {
-                                toast.error("Максимальное количество — 50");
-                            }
-                        }}
-                        disabled={currentElement.quantity >= 51}
+                        className="btn__card product__item__card__button right h-mobile-card"
+                        aria-label="Увеличить количество"
+                        onClick={increase}
+                        disabled={isMaxReached}
                     >
                         <FaPlus />
                     </ButtonCustom>
                 </div>
             ) : (
                 <ButtonCustom
-                    className={`btn__default btn__card product__item__card__button ${isMobile ? 'w-full h-mobile-card' : ''}`}
-                    onClick={() => 
-                        addToCart({
-                            product,
-                            quantity: 1,
-                            price: product.price,
-                        })
-                    }
+                    className={`btn__card product__item__card__button ${isMobile ? 'w-full h-mobile-card' : ''}`}
+                    onClick={add}
                 >
                     <div className={`flex-row items-center ${isMobile ? 'w-full justify-center' : 'w-20 justify-between '}`}>
                         <FaPlus />

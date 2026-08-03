@@ -33,13 +33,6 @@ export const UserService = {
       url: `${USERS}/${id}`,
       method: 'DELETE'
     })
-  },
-
-  async getAllPhones() {
-    return instance<{ id: number; phone: string }[]>({
-      url: `${USERS}/phones`,
-      method: 'GET'
-    });
   }
 }
 

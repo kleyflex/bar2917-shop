@@ -48,7 +48,7 @@ const OrderHistory = () => {
     };
 
     const statusColors: { [key: string]: string } = {
-        PENDING: "text-orange-500",
+        PENDING: "text-mainprimary",
         PAYED: 'text-green-500',
         SHIPPED: "text-blue-500",
         DELIVERED: "text-purple-500",

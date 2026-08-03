@@ -20,14 +20,22 @@ export function withClickOutside(
 
     useEffect(() => {
       const handleClickOutside = (e: MouseEvent) => {
-        if (!ref.current.contains(e.target as HTMLDivElement)) {
+        if (ref.current && !ref.current.contains(e.target as HTMLDivElement)) {
           setOpen(false)
         }
       }
 
-      document.addEventListener('mousedown', handleClickOutside)
+      const handleEscape = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') setOpen(false)
+      }
 
-      return () => document.removeEventListener('mousedown', handleClickOutside)
+      document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener('keydown', handleEscape)
+
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside)
+        document.removeEventListener('keydown', handleEscape)
+      }
     }, [ref])
 
     return <WrappedComponent open={open} setOpen={setOpen} ref={ref} />

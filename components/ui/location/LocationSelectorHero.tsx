@@ -99,8 +99,8 @@ export default function LocationSelectorHero() {
           <div className="flex flex-col sm:flex-row items-center sm:items-start sm:justify-between gap-3">
             {/* Левая часть - информация */}
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 flex-1">
-              <div className="p-1.5 bg-orange-500/15 rounded-full sm:mt-0.5">
-                <MapPin className="w-4 h-4 text-orange-500" />
+              <div className="p-1.5 bg-mainprimary/15 rounded-full sm:mt-0.5">
+                <MapPin className="w-4 h-4 text-mainprimary" />
               </div>
               <div className="text-center sm:text-left">
                 <h3 className="text-sm font-medium text-white mb-0.5">
@@ -148,7 +148,7 @@ export default function LocationSelectorHero() {
         <ModalContent className={isMobile ? "max-w-[350px] mx-auto" : ""}>
           <ModalHeader className={`flex flex-col gap-1 ${isMobile ? "p-4" : ""}`}>
             <h3 className={`${isMobile ? "text-lg" : "text-2xl"} font-bold text-white flex items-center gap-2`}>
-              <MapPin className="w-6 h-6 text-orange-500" />
+              <MapPin className="w-6 h-6 text-mainprimary" />
               Выберите ресторан
             </h3>
             <p className={`${isMobile ? "text-sm" : "text-base"} text-gray-300`}>
@@ -162,8 +162,8 @@ export default function LocationSelectorHero() {
                   key={location.id}
                   className={`w-full h-auto ${isMobile ? "p-4" : "p-6"} ${
                     selectedLocationId === location.id 
-                      ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white hover:from-orange-600 hover:to-orange-700 shadow-lg' 
-                      : 'bg-[#2D2D2D]/90 text-white hover:bg-[#3D3D3D] border border-[#3D3D3D] hover:border-orange-500/50'
+                      ? 'bg-gradient-to-r from-mainprimary to-mainprimary text-white hover:opacity-90 shadow-lg' 
+                      : 'bg-[#2D2D2D]/90 text-white hover:bg-[#3D3D3D] border border-[#3D3D3D] hover:border-mainprimary/50'
                   } transition-all duration-300 transform hover:scale-[1.02]`}
                   onClick={() => handleLocationChange(location.id)}
                 >
@@ -172,12 +172,12 @@ export default function LocationSelectorHero() {
                       <div className={`p-2 rounded-full ${
                         selectedLocationId === location.id 
                           ? 'bg-white/20' 
-                          : 'bg-orange-500/20'
+                          : 'bg-mainprimary/20'
                       }`}>
                         <MapPin className={`${isMobile ? "w-4 h-4" : "w-5 h-5"} ${
                           selectedLocationId === location.id 
                             ? 'text-white' 
-                            : 'text-orange-500'
+                            : 'text-mainprimary'
                         }`} />
                       </div>
                     </div>

@@ -1,16 +1,16 @@
 'use client';
 
+import { useCategoryLinks } from '@/components/hocs/useCategoryLinks';
 import { Button, Modal, ModalBody, ModalContent } from '@nextui-org/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { IoClose } from 'react-icons/io5';
 import { RxHamburgerMenu } from 'react-icons/rx';
 
 const MobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const pathname = usePathname();
+  const categories = useCategoryLinks();
 
   const handleOpen = () => {
     setIsOpen(true);
@@ -22,11 +22,11 @@ const MobileMenu = () => {
 
   return (
     <div className="mobile-menu-container">
-      <Button 
+      <Button
         isIconOnly
         size="sm"
-        variant="light" 
-        aria-label="Menu" 
+        variant="light"
+        aria-label="Открыть меню"
         className="mobile-menu-button"
         onClick={handleOpen}
       >
@@ -72,9 +72,10 @@ const MobileMenu = () => {
         <ModalContent className="h-screen w-[280px] absolute right-0 top-0 m-0 rounded-none">
           {(onClose) => (
             <ModalBody className="p-6 overflow-y-auto">
-              <Button 
-                isIconOnly 
-                variant="light" 
+              <Button
+                isIconOnly
+                variant="light"
+                aria-label="Закрыть меню"
                 className="absolute top-3 right-3 z-[2001]"
                 onClick={onClose}
               >
@@ -90,97 +91,19 @@ const MobileMenu = () => {
                 />
               </div>
 
-              <div className="mobile-menu__items">
-                <Link 
-                  href="/category/rolls" 
-                  className="mobile-menu__item" 
-                  onClick={onClose}
-                >
-                  <div className="mobile-menu__icon item--rolls"></div>
-                  <span className="mobile-menu__text">Роллы</span>
-                </Link>
-                
-                <Link 
-                  href="/category/sushi" 
-                  className="mobile-menu__item" 
-                  onClick={onClose}
-                >
-                  <div className="mobile-menu__icon item--sushi"></div>
-                  <span className="mobile-menu__text">Суши</span>
-                </Link>
-                
-                <Link 
-                  href="/category/sets" 
-                  className="mobile-menu__item" 
-                  onClick={onClose}
-                >
-                  <div className="mobile-menu__icon item--sets"></div>
-                  <span className="mobile-menu__text">Сеты</span>
-                </Link>
-                
-                <Link 
-                  href="/category/pizza" 
-                  className="mobile-menu__item" 
-                  onClick={onClose}
-                >
-                  <div className="mobile-menu__icon item--pizza"></div>
-                  <span className="mobile-menu__text">Пицца</span>
-                </Link>
-                
-                <Link 
-                  href="/category/snacks" 
-                  className="mobile-menu__item" 
-                  onClick={onClose}
-                >
-                  <div className="mobile-menu__icon item--snacks"></div>
-                  <span className="mobile-menu__text">Закуски</span>
-                </Link>
-                
-                <Link
-                  href="/category/maki"
-                  className="mobile-menu__item"
-                  onClick={onClose}
-                >
-                  <div className="mobile-menu__icon item--maki"></div>
-                  <span className="mobile-menu__text">Маки</span>
-                </Link>
-                
-                <Link 
-                  href="/category/salads" 
-                  className="mobile-menu__item" 
-                  onClick={onClose}
-                >
-                  <div className="mobile-menu__icon item--salads"></div>
-                  <span className="mobile-menu__text">Салаты</span>
-                </Link>
-                
-                <Link 
-                  href="/category/soups" 
-                  className="mobile-menu__item" 
-                  onClick={onClose}
-                >
-                  <div className="mobile-menu__icon item--soups"></div>
-                  <span className="mobile-menu__text">Супы</span>
-                </Link>
-                
-                <Link 
-                  href="/category/wok" 
-                  className="mobile-menu__item" 
-                  onClick={onClose}
-                >
-                  <div className="mobile-menu__icon item--wok"></div>
-                  <span className="mobile-menu__text">Вок</span>
-                </Link>
-                
-                <Link 
-                  href="/category/additionally" 
-                  className="mobile-menu__item" 
-                  onClick={onClose}
-                >
-                  <div className="mobile-menu__icon item--additionally"></div>
-                  <span className="mobile-menu__text">Дополнительно</span>
-                </Link>
-              </div>
+              <nav className="mobile-menu__items" aria-label="Категории меню">
+                {categories.map(category => (
+                  <Link
+                    key={category.id}
+                    href={`/category/${category.slug}`}
+                    className="mobile-menu__item"
+                    onClick={onClose}
+                  >
+                    <div className={`mobile-menu__icon item--${category.slug}`}></div>
+                    <span className="mobile-menu__text">{category.name}</span>
+                  </Link>
+                ))}
+              </nav>
             </ModalBody>
           )}
         </ModalContent>
@@ -189,4 +112,4 @@ const MobileMenu = () => {
   );
 };
 
-export default MobileMenu; 
+export default MobileMenu;

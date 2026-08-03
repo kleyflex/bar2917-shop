@@ -1,5 +1,5 @@
 'use client'
-import { useAuth } from '@/components/hocs/useAuth'
+import { ORDERS_ENABLED } from '@/app/config/features'
 import { useCart } from '@/components/hocs/useCart'
 import { withClickOutside } from '@/components/hocs/withClickOutside'
 import { IWrappedComponentProps } from '@/types/hocs'
@@ -11,29 +11,25 @@ import CartItem from '../CartItem/CartItem'
 const CartPopup = forwardRef<HTMLDivElement, IWrappedComponentProps>(
   ({ open, setOpen }, ref) => {
 
-    const { items, total} = useCart()
-    
-    const { user } = useAuth();
+    const { items, total } = useCart()
 
     const handleShowPopup = () => setOpen(true)
-
     const handleHidePopup = () => setOpen(false)
 
     return (
       <div className='cart-popup' ref={ref}>
-                  {user ? (
-              <Link
-              className='header__icon__links__item item__busket'
-              href='/order'
-              onMouseEnter={handleShowPopup}
-            ><div className='header__icon__links__card__item--busket' /></Link>
-            ) : (
-              <Link
+        <button
+          type='button'
           className='header__icon__links__item item__busket'
-          href='/auth'
+          aria-label={`Корзина, товаров: ${items.length}`}
+          aria-expanded={open}
           onMouseEnter={handleShowPopup}
-        ><div className='header__icon__links__card__item--busket' /></Link>
-            )}
+          onFocus={handleShowPopup}
+          onClick={() => setOpen(!open)}
+        >
+          <div className='header__icon__links__card__item--busket' />
+        </button>
+
         <AnimatePresence>
           {open && (
             <motion.div
@@ -46,7 +42,9 @@ const CartPopup = forwardRef<HTMLDivElement, IWrappedComponentProps>(
               <div className='cart-popup__up'>
                 <span className='cart-popup__title'>Корзина</span>
                 <button
+                  type='button'
                   className='btn-reset cart-popup__close'
+                  aria-label='Закрыть корзину'
                   onClick={handleHidePopup}
                 />
               </div>
@@ -54,8 +52,10 @@ const CartPopup = forwardRef<HTMLDivElement, IWrappedComponentProps>(
                 {items.length ? (
                   items.map(item => <CartItem item={item} key={item.id} />)
                 ) : (
-                  <div className='cart-popup__cart-list__empty-cart' />
-                )}  
+                  <div className='cart-popup__cart-list__empty-cart'>
+                    <span className='text-sm text-gray-400'>Корзина пуста</span>
+                  </div>
+                )}
               </div>
               <div className='cart-popup__footer'>
                 <div className='cart-popup__footer__inner'>
@@ -63,15 +63,16 @@ const CartPopup = forwardRef<HTMLDivElement, IWrappedComponentProps>(
                   <span>{total} ₽</span>
                 </div>
 
-                {user ? (
-              <Link href='/order' className='cart-popup__footer__link'>
-              Перейти к оформлению
-            </Link>
-            ) : (
-              <Link href='/auth' className='cart-popup__footer__link'>
-                  Перейти к оформлению
-                </Link>
-            )}                
+                {ORDERS_ENABLED ? (
+                  <Link href='/order' className='cart-popup__footer__link'>
+                    Перейти к оформлению
+                  </Link>
+                ) : (
+                  <p className='text-sm text-gray-400 text-center leading-5'>
+                    Онлайн-оформление временно недоступно.<br />
+                    Позвоните нам, чтобы сделать заказ.
+                  </p>
+                )}
               </div>
             </motion.div>
           )}

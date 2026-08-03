@@ -60,7 +60,7 @@
 }
 
 .condition-value {
-    color: #FF8A00;
+    color: var(--color-primary);
     font-weight: 600;
     font-size: 16px;
     margin-top: 7px;
@@ -137,7 +137,7 @@
 
 .delivery-info__notes p::before {
     content: "•";
-    color: #FF8A00;
+    color: var(--color-primary);
     position: absolute;
     left: 0;
 }

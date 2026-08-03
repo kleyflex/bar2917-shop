@@ -59,7 +59,7 @@
         margin: 0 !important;
         background: rgba(0, 0, 0, 0.5) !important;
         border-radius: 50% !important;
-        color: #FF8A00 !important;
+        color: var(--color-primary) !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -206,7 +206,7 @@
         margin: 0 !important;
         background: rgba(0, 0, 0, 0.5) !important;
         border-radius: 50% !important;
-        color: #FF8A00 !important;
+        color: var(--color-primary) !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -330,7 +330,7 @@
     }
 
     .mobile-menu__item:hover {
-        background-color: #FF8A00 !important;
+        background-color: var(--color-primary) !important;
         color: white !important;
     }
 
@@ -630,7 +630,7 @@
     /* Стилизация кнопки выбора местоположения */
     .header__content__info__geo button {
         font-size: 12px !important;
-        color: #FF8A00 !important;
+        color: var(--color-primary) !important;
         white-space: nowrap !important;
         text-overflow: ellipsis !important;
         overflow: hidden !important;
@@ -698,7 +698,7 @@
     }
 
     .mobile-nav-item.active {
-        color: #FF8A00 !important;
+        color: var(--color-primary) !important;
     }
 
     .mobile-nav-icon {

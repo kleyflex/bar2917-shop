@@ -51,7 +51,7 @@
 }
 
 .contacts__block a {
-    color: #FF8A00;
+    color: var(--color-primary);
     text-decoration: none;
     transition: color 0.3s ease;
 }
@@ -108,7 +108,7 @@
 
 .contacts__advantages li::before {
     content: "•";
-    color: #FF8A00;
+    color: var(--color-primary);
     position: absolute;
     left: 0;
     font-size: 1.2rem;
