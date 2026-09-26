@@ -105,7 +105,14 @@
 }
 
 .payment-icon {
-    font-size: 24px;
+    display: flex;
+    flex-shrink: 0;
+    color: var(--color-primary);
+}
+
+.payment-icon svg {
+    width: 28px;
+    height: 28px;
 }
 
 .payment-details h3 {
@@ -166,8 +173,12 @@
     }
 
     .payment-icon {
-        font-size: 32px;
         margin-bottom: 8px;
+    }
+
+    .payment-icon svg {
+        width: 32px;
+        height: 32px;
     }
 }
 

@@ -37,9 +37,15 @@ export async function generateMetadata({ params }: IProductPageParams): Promise<
     const name = product.name;
     const categoryName = product.category?.name ?? '';
 
-    const description =
-        `${name} 🍣 ${product.description} ⭐ Вес: ${product.weight}г 📏 ${price ? `Цена: ${price}₽ 💰 ` : ''}` +
-        `Заказывайте ${name.toLowerCase()} в Bar2917! Свежие ингредиенты ✨`;
+    const productDescription = product.description?.trim().replace(/[.!]+$/, '');
+
+    const description = [
+        name,
+        productDescription,
+        `Вес: ${product.weight} г`,
+        price ? `Цена: ${price} ₽` : '',
+        `Заказывайте ${name.toLowerCase()} в Bar2917 — только свежие ингредиенты`
+    ].filter(Boolean).join('. ') + '.';
 
     // Суффикс «| Bar2917» добавит title.template из корневого layout
     return {

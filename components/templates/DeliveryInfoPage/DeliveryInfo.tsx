@@ -2,6 +2,7 @@
 import { RootState } from '@/app/store/store';
 import MainLayout from "@/components/layouts/MainLayout";
 import { useSelector } from 'react-redux';
+import { Banknote, CreditCard, Info, MapPin, ShoppingBag, Truck } from 'lucide-react';
 
 const DeliveryInfo = () => {
     const { locations } = useSelector((state: RootState) => state.location);
@@ -18,7 +19,7 @@ const DeliveryInfo = () => {
 
                 <section className="delivery-info__main">
                     <div className="delivery-info__block">
-                        <h2>🚚 Условия доставки</h2>
+                        <h2 className="icon-heading"><Truck aria-hidden />Условия доставки</h2>
                         <div className="delivery-info__conditions">
                             <div className="delivery-info__condition-item">
                                 <span className="condition-label">Стоимость доставки:</span>
@@ -40,7 +41,7 @@ const DeliveryInfo = () => {
                     </div>
 
                     <div className="delivery-info__block">
-                        <h2>📍 Наши адреса</h2>
+                        <h2 className="icon-heading"><MapPin aria-hidden />Наши адреса</h2>
                         <div className="delivery-info__locations">
                             {locations.map((location) => (
                                 <div key={location.id} className="delivery-info__location-item">
@@ -56,24 +57,24 @@ const DeliveryInfo = () => {
                     </div>
 
                     <div className="delivery-info__block">
-                        <h2>💳 Способы оплаты</h2>
+                        <h2 className="icon-heading"><CreditCard aria-hidden />Способы оплаты</h2>
                         <div className="delivery-info__payment-methods">
                             <div className="payment-method">
-                                <div className="payment-icon">💵</div>
+                                <div className="payment-icon"><Banknote aria-hidden /></div>
                                 <div className="payment-details">
                                     <h3>Наличными</h3>
                                     <p>Оплата наличными курьеру при получении</p>
                                 </div>
                             </div>
                             <div className="payment-method">
-                                <div className="payment-icon">💳</div>
+                                <div className="payment-icon"><CreditCard aria-hidden /></div>
                                 <div className="payment-details">
                                     <h3>Картой</h3>
                                     <p>Оплата картой курьеру при получении</p>
                                 </div>
                             </div>
                             <div className="payment-method">
-                                <div className="payment-icon">🏃</div>
+                                <div className="payment-icon"><ShoppingBag aria-hidden /></div>
                                 <div className="payment-details">
                                     <h3>Самовывоз</h3>
                                     <p>Оплата при получении в ресторане</p>
@@ -83,7 +84,7 @@ const DeliveryInfo = () => {
                     </div>
 
                     <div className="delivery-info__block">
-                        <h2>ℹ️ Важная информация</h2>
+                        <h2 className="icon-heading"><Info aria-hidden />Важная информация</h2>
                         <div className="delivery-info__notes">
                             <p>Время доставки может варьироваться в зависимости от загруженности кухни и дорожной ситуации</p>
                             <p>Для компаний от 4-х человек рекомендуем делать предзаказ</p>

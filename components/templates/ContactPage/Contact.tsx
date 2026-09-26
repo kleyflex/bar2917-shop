@@ -2,6 +2,7 @@
 import { RootState } from '@/app/store/store';
 import MainLayout from "@/components/layouts/MainLayout";
 import { useSelector } from 'react-redux';
+import { ChefHat, Clock, FileText, Phone } from 'lucide-react';
 
 const Contact = () => {
     const { selectedLocationId, locations } = useSelector((state: RootState) => state.location);
@@ -20,20 +21,20 @@ const Contact = () => {
 
                 <section className="contacts__main-info">
                     <div className="contacts__block">
-                        <h2>📞 Связаться с нами</h2>
+                        <h2 className="icon-heading"><Phone aria-hidden />Связаться с нами</h2>
                         <p><strong>Телефон:</strong> {phoneNumber}</p>
                         <p><strong>Адрес:</strong> {selectedLocation?.address || 'гп. Новоселье, проспект Питерский, дом 5'}</p>
                     </div>
 
                     <div className="contacts__block">
-                        <h2>⏰ Время работы</h2>
+                        <h2 className="icon-heading"><Clock aria-hidden />Время работы</h2>
                         <p><strong>Режим работы:</strong> ежедневно до 23:00</p>
                         <p><strong>Доставка:</strong> ежедневно с 11:00</p>
                     </div>
                 </section>
 
                 <section className="contacts__about">
-                    <h2>🍣 О нас</h2>
+                    <h2 className="icon-heading"><ChefHat aria-hidden />О нас</h2>
                     <p>
                         <strong>BAR2917 – современная доставка самых вкусных роллов!</strong>
                     </p>
@@ -53,7 +54,7 @@ const Contact = () => {
                 </section>
 
                 <section className="contacts__legal">
-                    <h2>📄 Юридическая информация</h2>
+                    <h2 className="icon-heading"><FileText aria-hidden />Юридическая информация</h2>
                     <div className="contacts__legal-details">
                         <p><strong>ИП Бондарчук Екатерина Сергеевна</strong></p>
                         <p><strong>ИНН:</strong> 780255513697</p>
