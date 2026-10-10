@@ -1,11 +1,10 @@
 'use client'
-import { RootState } from '@/app/store/store';
 import { useAuth } from '@/components/hocs/useAuth';
+import { useCurrentLocation } from '@/components/layouts/ServerLocationContext';
 import LocationSelector from '@/components/ui/location/LocationSelector';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
 import AuthModal from '../Auth/AuthModal';
 import MobileMenu from '../MobileMenu/MobileMenu';
 import CartPopup from './CartPopup/CartPopup';
@@ -13,9 +12,7 @@ import CartPopup from './CartPopup/CartPopup';
 const Header = () => {
   const { user } = useAuth();
   const [isAuthOpen, setIsAuthOpen] = useState(false);
-  const { selectedLocationId, locations } = useSelector((state: RootState) => state.location);
-
-  const selectedLocation = locations.find(loc => loc.id === selectedLocationId);
+  const { selectedLocation } = useCurrentLocation();
   const phoneNumber = selectedLocation?.phone || '+7 (981) 156-56-67';
 
   return (

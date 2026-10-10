@@ -51,5 +51,5 @@ export const getProductBySlug = (slug: string, locationId: number | null) =>
 
 export const getSimilarProducts = async (productId: number, locationId: number | null) =>
     locationId
-        ? (await fetchJson<IProduct[]>(`/products/similar/${productId}?locationId=${locationId}&limit=8`, 60)) ?? []
+        ? (await fetchJson<IProduct[]>(`/products/similar/${productId}?locationId=${locationId}&limit=3`, 60)) ?? []
         : [];

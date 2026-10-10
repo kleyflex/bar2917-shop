@@ -3,6 +3,7 @@
 import { ILocation, LocationService } from '@/app/services/location.service';
 import { setLocations, setSelectedLocation } from '@/app/store/location/location.slice';
 import { RootState } from '@/app/store/store';
+import { useCurrentLocation, useServerLocation } from '@/components/layouts/ServerLocationContext';
 import { Button, Card, CardBody, Modal, ModalBody, ModalContent, ModalHeader, useDisclosure } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import { MapPin, ChevronDown } from 'lucide-react';
@@ -13,6 +14,9 @@ export default function LocationSelectorHero() {
   const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { selectedLocationId, locations } = useSelector((state: RootState) => state.location);
+  // Для отображения: Redux, а до его восстановления — точки и выбор с сервера
+  const current = useCurrentLocation();
+  const serverLocation = useServerLocation();
   const [isMobile, setIsMobile] = useState(false);
 
   // Проверка мобильного устройства
@@ -32,6 +36,8 @@ export default function LocationSelectorHero() {
   const { data: locationsData, isLoading } = useQuery<ILocation[]>({
     queryKey: ['locations'],
     queryFn: () => LocationService.getAll(),
+    // Точки уже загружены сервером — повторный запрос при открытии страницы не нужен
+    initialData: serverLocation.locations.length ? serverLocation.locations : undefined,
     staleTime: 1000 * 60 * 5,
     refetchOnMount: true,
     retry: 3
@@ -69,7 +75,7 @@ export default function LocationSelectorHero() {
 
   // Заглушка той же высоты, что и готовый блок: раньше здесь был return null,
   // и появление карточки толкало весь контент вниз
-  if (isLoading && locations.length === 0) {
+  if (isLoading && current.locations.length === 0) {
     return (
       <div className="w-full py-3 px-4 sm:px-0" aria-hidden="true">
         <div className="location-selector-hero rounded-large h-[166px] sm:h-[73px] animate-pulse" />
@@ -77,7 +83,7 @@ export default function LocationSelectorHero() {
     );
   }
 
-  const selectedLocation = locations.find(loc => loc.id === selectedLocationId);
+  const { selectedLocation } = current;
 
   return (
     <div className="w-full py-3 px-4 sm:px-0">
@@ -144,11 +150,11 @@ export default function LocationSelectorHero() {
           </ModalHeader>
           <ModalBody className={isMobile ? "pt-2 pb-4 px-4" : ""}>
             <div className={`grid ${isMobile ? "gap-3" : "gap-4"}`}>
-              {locations.filter(loc => loc.isActive).map((location) => (
+              {current.locations.filter(loc => loc.isActive).map((location) => (
                 <Button
                   key={location.id}
                   className={`w-full h-auto ${isMobile ? "p-4" : "p-6"} ${
-                    selectedLocationId === location.id 
+                    current.selectedLocationId === location.id 
                       ? 'bg-gradient-to-r from-mainprimary to-mainprimary text-white hover:opacity-90 shadow-lg' 
                       : 'bg-[#2D2D2D]/90 text-white hover:bg-[#3D3D3D] border border-[#3D3D3D] hover:border-mainprimary/50'
                   } transition-all duration-300 transform hover:scale-[1.02]`}
@@ -157,12 +163,12 @@ export default function LocationSelectorHero() {
                   <div className={`flex items-start ${isMobile ? "gap-3" : "gap-4"} w-full`}>
                     <div className="flex-shrink-0 mt-1">
                       <div className={`p-2 rounded-full ${
-                        selectedLocationId === location.id 
+                        current.selectedLocationId === location.id 
                           ? 'bg-white/20' 
                           : 'bg-mainprimary/20'
                       }`}>
                         <MapPin className={`${isMobile ? "w-4 h-4" : "w-5 h-5"} ${
-                          selectedLocationId === location.id 
+                          current.selectedLocationId === location.id 
                             ? 'text-white' 
                             : 'text-mainprimary'
                         }`} />
@@ -173,21 +179,21 @@ export default function LocationSelectorHero() {
                         {location.name}
                       </span>
                       <span className={`${isMobile ? "text-xs" : "text-sm"} ${
-                        selectedLocationId === location.id 
+                        current.selectedLocationId === location.id 
                           ? 'text-white/90' 
                           : 'text-gray-300'
                       } w-full text-left leading-relaxed`}>
                         {location.address}
                       </span>
                       <span className={`${isMobile ? "text-xs" : "text-sm"} ${
-                        selectedLocationId === location.id 
+                        current.selectedLocationId === location.id 
                           ? 'text-white/80' 
                           : 'text-orange-400'
                       } font-medium`}>
                         {location.phone}
                       </span>
                     </div>
-                    {selectedLocationId === location.id && (
+                    {current.selectedLocationId === location.id && (
                       <div className="flex-shrink-0 flex items-center justify-center">
                         <div className={`${isMobile ? "w-3 h-3" : "w-4 h-4"} rounded-full bg-white shadow-lg`} />
                       </div>
