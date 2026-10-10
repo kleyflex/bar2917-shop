@@ -1,6 +1,5 @@
 'use client'
 import { RootState } from '@/app/store/store';
-import MainLayout from "@/components/layouts/MainLayout";
 import { useSelector } from 'react-redux';
 import { Banknote, CreditCard, Info, MapPin, ShoppingBag, Truck } from 'lucide-react';
 
@@ -8,7 +7,7 @@ const DeliveryInfo = () => {
     const { locations } = useSelector((state: RootState) => state.location);
 
     return(
-        <MainLayout>
+        <>
             <div className="delivery-info">
                 <section className="delivery-info__header">
                     <h1>Доставка и оплата</h1>
@@ -92,7 +91,7 @@ const DeliveryInfo = () => {
                     </div>
                 </section>
             </div>
-        </MainLayout>
+        </>
     )
 }
 

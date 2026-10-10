@@ -4,14 +4,13 @@ import { ILocation, LocationService } from '@/app/services/location.service';
 import { setLocations, setSelectedLocation } from '@/app/store/location/location.slice';
 import { RootState } from '@/app/store/store';
 import { Button, Card, CardBody, Modal, ModalBody, ModalContent, ModalHeader, useDisclosure } from '@nextui-org/react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { MapPin, ChevronDown } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function LocationSelectorHero() {
   const dispatch = useDispatch();
-  const queryClient = useQueryClient();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { selectedLocationId, locations } = useSelector((state: RootState) => state.location);
   const [isMobile, setIsMobile] = useState(false);
@@ -47,7 +46,7 @@ export default function LocationSelectorHero() {
 
   // Инициализация выбранной локации
   useEffect(() => {
-    const initializeSelectedLocation = async () => {
+    const initializeSelectedLocation = () => {
       if (locations.length > 0 && !selectedLocationId) {
         const defaultLocation = locations.find(loc => loc.isDefault && loc.isActive);
         const activeLocation = locations.find(loc => loc.isActive);
@@ -55,35 +54,17 @@ export default function LocationSelectorHero() {
         
         if (locationToSet) {
           dispatch(setSelectedLocation(locationToSet.id));
-          
-          await Promise.all([
-            queryClient.invalidateQueries({ queryKey: ['category-products'] }),
-            queryClient.invalidateQueries({ queryKey: ['products'] }),
-            queryClient.invalidateQueries({ queryKey: ['main-products'] })
-          ]);
         }
       }
     };
 
     initializeSelectedLocation();
-  }, [locations, selectedLocationId, dispatch, queryClient]);
+  }, [locations, selectedLocationId, dispatch]);
 
-  const handleLocationChange = async (locationId: number) => {
+  // Данные под новую точку перезагрузит LocationCookieSync (cookie + router.refresh)
+  const handleLocationChange = (locationId: number) => {
     dispatch(setSelectedLocation(locationId));
     onClose();
-
-    // Инвалидируем все зависимые запросы
-    await Promise.all([
-      queryClient.invalidateQueries({ queryKey: ['category-products'] }),
-      queryClient.invalidateQueries({ queryKey: ['products'] }),
-      queryClient.invalidateQueries({ queryKey: ['main-products'] }),
-      queryClient.invalidateQueries({ queryKey: ['cart-products'] })
-    ]);
-
-    await queryClient.refetchQueries({
-      queryKey: ['main-products'],
-      type: 'active'
-    });
   };
 
   // Заглушка той же высоты, что и готовый блок: раньше здесь был return null,

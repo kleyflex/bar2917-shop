@@ -1,5 +1,4 @@
 'use client'
-import MainLayout from "@/components/layouts/MainLayout";
 import Loader from "@/components/ui/Loader";
 import { useQuery } from "@tanstack/react-query";
 import { FC } from "react";
@@ -13,7 +12,7 @@ const Dashboard: FC = () => {
     })
 
     return (
-        <MainLayout>
+        <>
             <section>
                 <h1>Статистика</h1>
                 {isFetching ? (
@@ -33,7 +32,7 @@ const Dashboard: FC = () => {
                     <div>Не удалось загрузить статистику</div>
                     )}
             </section>
-        </MainLayout>
+        </>
     )
 }
 

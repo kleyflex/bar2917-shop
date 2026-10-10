@@ -4,7 +4,6 @@ import { CategoryService } from "@/app/services/category.service";
 import { FileService } from "@/app/services/file.service";
 import { LocationService } from "@/app/services/location.service";
 import { ProductService } from "@/app/services/product/product.service";
-import MainLayout from "@/components/layouts/MainLayout";
 import Loader from "@/components/ui/Loader";
 import ButtonCustom from "@/components/ui/button/ButtonCustom";
 import Field from "@/components/ui/input/Field";
@@ -153,14 +152,14 @@ const ProductForm = ({ productId }: IProductForm) => {
 
     if (isEdit && isProductLoading) {
         return (
-            <MainLayout>
+            <>
                 <Loader />
-            </MainLayout>
+            </>
         );
     }
 
     return (
-        <MainLayout>
+        <>
             <section className="max-w-2xl">
                 <h1>{isEdit ? 'Редактирование товара' : 'Новый товар'}</h1>
 
@@ -276,7 +275,7 @@ const ProductForm = ({ productId }: IProductForm) => {
                     </div>
                 </form>
             </section>
-        </MainLayout>
+        </>
     );
 };
 

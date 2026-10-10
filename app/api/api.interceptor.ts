@@ -28,10 +28,14 @@ instance.interceptors.response.use(
     async error => {
         const originalRequest = error.config
 
+        // 401 от /auth/* — это неверный логин/пароль, а не протухший токен: обновлять нечего
+        const isAuthRequest = String(error.config?.url ?? '').startsWith('/auth/')
+
         if (
             error.response?.status === 401 &&
             error.config &&
-            !error.config._isRetry
+            !error.config._isRetry &&
+            !isAuthRequest
         ) {
             originalRequest._isRetry = true
             try {

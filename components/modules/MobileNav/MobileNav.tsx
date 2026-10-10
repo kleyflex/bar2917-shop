@@ -38,11 +38,16 @@ const MobileNav = () => {
           </button>
         )}
 
-        {ORDERS_ENABLED ? (
-          <Link href={user ? '/order' : '/auth'} className="mobile-nav-item">
+        {ORDERS_ENABLED && user ? (
+          <Link href="/order" className="mobile-nav-item">
             <FiShoppingCart className="mobile-nav-icon" />
             <span className="mobile-nav-text">Корзина</span>
           </Link>
+        ) : ORDERS_ENABLED ? (
+          <button type="button" onClick={() => setAuthOpen(true)} className="mobile-nav-item">
+            <FiShoppingCart className="mobile-nav-icon" />
+            <span className="mobile-nav-text">Корзина</span>
+          </button>
         ) : (
           <button
             type="button"

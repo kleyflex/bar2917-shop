@@ -1,8 +1,7 @@
-import MainLayout from "@/components/layouts/MainLayout";
 
 const UserAgreement = () => {
     return(
-        <MainLayout>
+        <>
             <div className="public_offer max-w-5xl ml-5">
                 <h1 className="max-w-5xl tracking-[0.2] leading-[1.5]">
                     Пользовательское соглашение
@@ -107,7 +106,7 @@ const UserAgreement = () => {
                     <p>9.2.4. Подпись Клиента.</p>
                 </div>
             </div>
-        </MainLayout>
+        </>
     );
 }
 

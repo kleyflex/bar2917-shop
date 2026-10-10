@@ -1,18 +1,25 @@
-import { getStoreLocal } from "@/lib/utils/local-storage";
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { checkAuth, login, logout, register } from "./user.actions";
-import { IInitialState } from "./user.interface";
+import { IInitialState, IUserState } from "./user.interface";
 
 
+// Пользователь из localStorage восстанавливается после гидрации (restoreUser в AuthProvider):
+// сервер его не знает, и чтение при старте давало разную разметку на сервере и клиенте
 const initialState: IInitialState = {
-    user: getStoreLocal('user'),
+    user: null,
     isLoading: false,
+    isInitialized: false,
 }
 
 export const userSlice = createSlice({
     name: 'user',
     initialState,
-    reducers: {},
+    reducers: {
+      restoreUser: (state, { payload }: PayloadAction<IUserState | null>) => {
+        state.user = payload
+        state.isInitialized = true
+      }
+    },
     extraReducers: builder => {
       builder.addCase(register.pending, state => {
         state.isLoading = true
@@ -45,4 +52,5 @@ export const userSlice = createSlice({
       })
     }
   })
-  
+
+export const { restoreUser } = userSlice.actions

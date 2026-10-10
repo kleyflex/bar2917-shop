@@ -1,11 +1,14 @@
 'use client'
+import { getErrorMessage } from "@/app/api/api.helper";
 import { UserService } from "@/app/services/user.service";
 import { useActions } from "@/components/hocs/useActions";
 import { useProfile } from "@/components/hocs/useProfile";
+import FormAlert from "@/components/ui/FormAlert";
 import Loader from "@/components/ui/Loader";
 import ButtonCustom from "@/components/ui/button/ButtonCustom";
 import { Input, Link } from "@nextui-org/react";
 import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { FaHistory } from "react-icons/fa";
@@ -20,6 +23,7 @@ interface IProfileForm {
 const ProfilePage = () => {
     const { profile, isLoading } = useProfile();
     const { logout } = useActions();
+    const [alert, setAlert] = useState('');
 
     const {
         control,
@@ -39,17 +43,17 @@ const ProfilePage = () => {
         mutationKey: ['update profile'],
         // Уникальность телефона проверяет сервер
         mutationFn: (data: IProfileForm) => UserService.updateProfile(data),
+        onMutate: () => setAlert(''),
         onSuccess: () => toast.success('Профиль обновлён'),
-        onError: (error: any) => {
-            const message = error?.response?.data?.message;
-            const text = Array.isArray(message) ? message.join(', ') : message;
+        onError: (error: unknown) => {
+            const text = getErrorMessage(error, 'Не удалось обновить профиль');
 
-            if (typeof text === 'string' && text.toLowerCase().includes('телефон')) {
+            if (text.toLowerCase().includes('телефон')) {
                 setError('phone', { message: text });
-            } else if (typeof text === 'string' && text.toLowerCase().includes('почт')) {
+            } else if (text.toLowerCase().includes('почт')) {
                 setError('email', { message: text });
             } else {
-                toast.error(text || 'Не удалось обновить профиль');
+                setAlert(text);
             }
         }
     });
@@ -117,6 +121,8 @@ const ProfilePage = () => {
                                         />
                                     )}
                                 />
+
+                                <FormAlert message={alert} className="mb-3" />
 
                                 <ButtonCustom type="submit" disabled={isPending}>
                                     {isPending ? 'Сохранение…' : 'Сохранить'}

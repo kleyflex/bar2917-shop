@@ -1,26 +1,25 @@
 'use client'
 import { useAuth } from '@/components/hocs/useAuth';
-import MainLayout from '@/components/layouts/MainLayout';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 const OrderPage = () => {
-    const { user } = useAuth();
+    const { user, isInitialized } = useAuth();
     const router = useRouter();
 
-    // Редирект только в эффекте
+    // Редирект только в эффекте и только после восстановления пользователя
     useEffect(() => {
-        if (!user) {
+        if (isInitialized && !user) {
             router.push('/');
         }
-    }, [user]);
+    }, [user, isInitialized]);
 
     if(!user) {
         return null;
     }
 
     return (
-        <MainLayout>
+        <>
             <div className="w-10/12 mx-auto my-12 bg-background-card border border-card-border p-6 rounded-lg">
                 <div className="flex justify-center items-center flex-col">
                     <div className="text-2xl text-white text-center mb-4">
@@ -38,7 +37,7 @@ const OrderPage = () => {
                     </button>
                 </div>
             </div>
-        </MainLayout>
+        </>
     );
 };
 

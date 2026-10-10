@@ -64,7 +64,10 @@ body {
   flex-direction: column;
 }
 
-div {
+/* Исторически вся вёрстка сайта держится на div = flex-колонка.
+   Внутренние элементы NextUI (у них есть data-slot) из правила исключены: им нужна их собственная раскладка.
+   :where() оставляет специфичность как у простого div, чтобы утилиты Tailwind по-прежнему перебивали правило */
+div:where(:not([data-slot])) {
   display: flex;
   flex-direction: column;
 }
@@ -254,9 +257,6 @@ h1 {
   height: 100vh;
 }
 
-.selectitem-span span {
-  color: white;
-}
 /*****************************************************************************/
 
 .hero__section {

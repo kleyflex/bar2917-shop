@@ -29,13 +29,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.8
     }));
 
-    const productSlugs: string[] = [];
-    for (const category of categories) {
-        const products = await fetchJson<{ slug: string }[]>(`${API_URL}/products/by-category/${category.slug}`) ?? [];
-        productSlugs.push(...products.map(product => product.slug));
+    // Товары всех точек: у разных ресторанов меню может отличаться
+    const locations = await fetchJson<{ id: number }[]>(`${API_URL}/locations`) ?? [];
+    const productSlugs = new Set<string>();
+    for (const location of locations) {
+        const data = await fetchJson<{ products: { slug: string }[] }>(`${API_URL}/products?locationId=${location.id}`);
+        data?.products.forEach(product => productSlugs.add(product.slug));
     }
 
-    const productPages: MetadataRoute.Sitemap = productSlugs.map(slug => ({
+    const productPages: MetadataRoute.Sitemap = Array.from(productSlugs, slug => ({
         url: `${SITE_URL}/product/${slug}`,
         changeFrequency: 'weekly',
         priority: 0.7

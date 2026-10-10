@@ -1,3 +1,4 @@
+import { getProducts, getServerLocationId } from '@/app/api/server-api'
 import MainPage from '@/components/templates/MainPage/MainPage'
 import type { Metadata } from 'next'
 
@@ -10,6 +11,9 @@ export const metadata: Metadata = {
   }
 }
 
-export default function Home() {
-  return <MainPage />
+export default async function Home() {
+  const locationId = await getServerLocationId()
+  const products = await getProducts(locationId)
+
+  return <MainPage products={products} />
 }

@@ -1,6 +1,5 @@
 'use client'
 import { RootState } from '@/app/store/store';
-import MainLayout from "@/components/layouts/MainLayout";
 import { useSelector } from 'react-redux';
 import { ChefHat, Clock, FileText, Phone } from 'lucide-react';
 
@@ -10,7 +9,7 @@ const Contact = () => {
     const phoneNumber = selectedLocation?.phone || '+7 (981) 156-56-67';
 
     return(
-        <MainLayout>
+        <>
             <div className="contacts">
                 <section className="contacts__header">
                     <h1>Контакты BAR2917</h1>
@@ -65,7 +64,7 @@ const Contact = () => {
                     </div>
                 </section>
             </div>
-        </MainLayout>
+        </>
     )
 }
 

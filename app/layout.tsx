@@ -43,7 +43,7 @@ export default function RootLayout({
   children
 }: PropsWithChildren<unknown>) {
   return (
-    <html lang="ru">
+    <html lang="ru" className="dark">
       <body>
         <Providers>
           {children}

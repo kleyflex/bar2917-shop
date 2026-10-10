@@ -3,7 +3,6 @@ import { OrderService } from "@/app/services/order.service";
 import { IOrder } from "@/app/types/order.interface";
 import { useActions } from "@/components/hocs/useActions";
 import { useAuth } from "@/components/hocs/useAuth";
-import MainLayout from "@/components/layouts/MainLayout";
 import Loader from "@/components/ui/Loader";
 import { Button } from "@nextui-org/react";
 import { useQuery } from "@tanstack/react-query";
@@ -69,7 +68,7 @@ const OrderHistory = () => {
     };
 
     return (
-        <MainLayout>
+        <>
             <section>
                 <h1>Мои заказы</h1>
                 <div className="flex-row">
@@ -133,7 +132,7 @@ const OrderHistory = () => {
                     </div>
                 </div>
             </section>
-        </MainLayout>
+        </>
     );
 };
 

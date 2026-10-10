@@ -1,8 +1,7 @@
-import MainLayout from "@/components/layouts/MainLayout";
 
 const Offer = () => {
     return(
-        <MainLayout>
+        <>
             <div className="public_offer max-w-5xl ml-5">
                 <h1 className="max-w-5xl tracking-[0.2] leading-[1.5]">
                     Публичная оферта о продаже товаров дистанционным способом
@@ -141,7 +140,7 @@ const Offer = () => {
                     <p><strong>Продавец:</strong> ИП Бондарчук Екатерина Сергеевна (ИНН: 780255513697, ОГРН: 318470400111956)</p>
                 </div>
             </div>
-        </MainLayout>
+        </>
     );
 }
 

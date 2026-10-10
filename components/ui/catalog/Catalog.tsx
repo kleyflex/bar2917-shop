@@ -20,6 +20,21 @@ const SORT_OPTIONS: { value: TypeSort; label: string }[] = [
     { value: 'name', label: 'По названию' }
 ]
 
+// Пункты списка сортировки: лёгкая подсветка при наведении/фокусе, выбранный — оранжевым,
+// как активный раздел меню. Стековые data-селекторы сильнее дефолтного серого focus-стиля NextUI
+const SORT_ITEM_CLASSES = {
+    base: [
+        "rounded-md px-3 py-2 text-white transition-colors",
+        "data-[hover=true]:bg-white/[0.06] data-[hover=true]:text-white",
+        "data-[selectable=true]:focus:bg-white/[0.06] data-[selectable=true]:focus:text-white",
+        "data-[selected=true]:bg-mainprimary/15",
+        "data-[selected=true]:data-[hover=true]:bg-mainprimary/20",
+        "data-[selected=true]:data-[selectable=true]:focus:bg-mainprimary/20"
+    ].join(' '),
+    title: "text-sm group-data-[selected=true]:text-mainprimary group-data-[selected=true]:font-medium",
+    selectedIcon: "text-mainprimary"
+}
+
 const Catalog: FC<ICatalog> = ({ products = [], withControls = true }) => {
     const [search, setSearch] = useState('')
     const [sort, setSort] = useState<TypeSort>('default')
@@ -73,17 +88,15 @@ const Catalog: FC<ICatalog> = ({ products = [], withControls = true }) => {
                         variant="bordered"
                         className="select-custom w-full sm:w-56"
                         classNames={{
-                            trigger: "h-11 bg-background-card border-card-border data-[hover=true]:border-mainprimary data-[open=true]:border-mainprimary",
-                            value: "text-white",
-                            popoverContent: "select-custom__popover bg-background-card border border-card-border"
+                            trigger: "h-11 bg-background-card border-card-border data-[hover=true]:border-mainprimary data-[open=true]:border-mainprimary data-[focus=true]:border-mainprimary",
+                            value: "!text-white",
+                            selectorIcon: "text-gray-400",
+                            popoverContent: "bg-background-card border border-card-border shadow-xl shadow-black/40 p-1"
                         }}
+                        listboxProps={{ itemClasses: SORT_ITEM_CLASSES }}
                     >
                         {SORT_OPTIONS.map(option => (
-                            <SelectItem
-                                key={option.value}
-                                value={option.value}
-                                className="selectitem-span text-white data-[hover=true]:bg-background-input data-[selected=true]:bg-mainprimary"
-                            >
+                            <SelectItem key={option.value} value={option.value}>
                                 {option.label}
                             </SelectItem>
                         ))}

@@ -1,8 +1,7 @@
-import { ICategory } from "@/app/types/category.interface";
+import { getCategoryBySlug, getProducts, getServerLocationId } from "@/app/api/server-api";
 import type { Metadata } from 'next';
+import { notFound } from "next/navigation";
 import CategoryPageClient from "./CategoryPageClient";
-
-const API_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
 interface ICategoryPageParams {
   params: {
@@ -10,22 +9,8 @@ interface ICategoryPageParams {
   };
 }
 
-async function getCategory(slug: string): Promise<ICategory | null> {
-  try {
-    const response = await fetch(`${API_URL}/categories/by-slug/${slug}`, {
-      next: { revalidate: 300 }
-    });
-
-    if (!response.ok) return null;
-
-    return await response.json();
-  } catch {
-    return null;
-  }
-}
-
 export async function generateMetadata({ params }: ICategoryPageParams): Promise<Metadata> {
-  const category = await getCategory(params.slug);
+  const category = await getCategoryBySlug(params.slug);
 
   if (!category) {
     return { title: 'Категория не найдена' };
@@ -48,6 +33,15 @@ export async function generateMetadata({ params }: ICategoryPageParams): Promise
   };
 }
 
-export default function CategoryPage({ params }: ICategoryPageParams) {
-  return <CategoryPageClient slug={params.slug} />;
+export default async function CategoryPage({ params }: ICategoryPageParams) {
+  const category = await getCategoryBySlug(params.slug);
+
+  if (!category) {
+    notFound();
+  }
+
+  const locationId = await getServerLocationId();
+  const products = await getProducts(locationId, category.slug);
+
+  return <CategoryPageClient category={category} products={products} />;
 }

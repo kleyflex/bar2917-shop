@@ -330,7 +330,7 @@
     }
 
     .mobile-menu__item:hover {
-        background-color: var(--color-primary) !important;
+        background-color: #333333 !important;
         color: white !important;
     }
 

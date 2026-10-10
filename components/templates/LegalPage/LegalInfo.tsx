@@ -1,9 +1,8 @@
-import MainLayout from "@/components/layouts/MainLayout";
 import Link from "next/link";
 
 const LegalInfo = () => {              
     return(
-        <MainLayout>
+        <>
             <div className="delivery__info">
                 <h1>Правовая информация</h1>
                 <div className="flex flex-col gap-6 text-gray-300">
@@ -21,7 +20,7 @@ const LegalInfo = () => {
                     </Link>
                 </div>
             </div>
-        </MainLayout>
+        </>
     )
 }
 

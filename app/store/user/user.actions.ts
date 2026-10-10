@@ -1,12 +1,12 @@
-import { errorCatch } from "@/app/api/api.helper";
+import { errorCatch, getErrorMessage, getErrorStatus } from "@/app/api/api.helper";
 import { removeFromStorage } from "@/app/services/auth/auth.helper";
 import { AuthService } from "@/app/services/auth/auth.service";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
-import { IAuthResponse, IEmailPassword } from "./user.interface";
+import { IAuthError, IAuthResponse, IEmailPassword } from "./user.interface";
 
 /* register */
-export const register = createAsyncThunk<IAuthResponse, IEmailPassword>(
+export const register = createAsyncThunk<IAuthResponse, IEmailPassword, { rejectValue: IAuthError }>(
     'auth/register',
     async (data, thunkApi) => {
       try {
@@ -14,13 +14,16 @@ export const register = createAsyncThunk<IAuthResponse, IEmailPassword>(
         toast.success('Регистрация прошла успешно');
         return response
       } catch (error) {
-        return thunkApi.rejectWithValue(errorCatch(error) || 'Не удалось зарегистрироваться')
+        return thunkApi.rejectWithValue({
+          status: getErrorStatus(error),
+          message: getErrorMessage(error, 'Не удалось зарегистрироваться')
+        })
       }
     }
   )
   
 /* login */
-export const login = createAsyncThunk<IAuthResponse, IEmailPassword>(
+export const login = createAsyncThunk<IAuthResponse, IEmailPassword, { rejectValue: IAuthError }>(
     'auth/login',
     async (data, thunkApi) => {
       try {
@@ -28,7 +31,10 @@ export const login = createAsyncThunk<IAuthResponse, IEmailPassword>(
         toast.success('Вы вошли в аккаунт');
         return response
       } catch (error) {
-        return thunkApi.rejectWithValue(errorCatch(error) || 'Не удалось войти')
+        return thunkApi.rejectWithValue({
+          status: getErrorStatus(error),
+          message: getErrorMessage(error, 'Не удалось войти')
+        })
       }
     }
   )

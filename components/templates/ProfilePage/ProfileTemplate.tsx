@@ -1,7 +1,6 @@
 'use client'
 
 import { useAuth } from "@/components/hocs/useAuth";
-import MainLayout from "@/components/layouts/MainLayout";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
 import ProfilePage from "./ProfilePage";
@@ -16,12 +15,12 @@ const ProfileTemplate: FC = () => {
     }
 
     return (
-        <MainLayout>
+        <>
                 <section>
                     <h1>Личный кабинет</h1>
                     <ProfilePage /> 
                 </section>
-        </MainLayout>
+        </>
     )
 }
 

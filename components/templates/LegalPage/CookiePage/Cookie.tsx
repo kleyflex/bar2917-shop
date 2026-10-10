@@ -1,8 +1,7 @@
-import MainLayout from "@/components/layouts/MainLayout";
 
 const Cookie = () => {
     return(
-        <MainLayout>
+        <>
             <div className="public_offer max-w-5xl ml-5">
                 <h1 className="max-w-5xl tracking-[0.2] leading-[1.5]">
                     Политика использования файлов cookies
@@ -64,7 +63,7 @@ const Cookie = () => {
                     <p>Мы можем время от времени обновлять эту Политику в ответ на изменения юридического или технического характера.</p>
                 </div>
             </div>
-        </MainLayout>
+        </>
     );
 }
 

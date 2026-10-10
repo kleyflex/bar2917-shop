@@ -1,9 +1,8 @@
-import { IProductFull } from "@/app/types/product.interface";
+import { getProductBySlug, getServerLocationId, getSimilarProducts } from "@/app/api/server-api";
 import type { Metadata } from 'next';
 import { notFound } from "next/navigation";
 import ProductPageClient from "./ProductPageClient";
 
-const API_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 const IMAGE_URL = process.env.NEXT_PUBLIC_SERVER_URL_IMAGE;
 
 interface IProductPageParams {
@@ -12,28 +11,20 @@ interface IProductPageParams {
     }
 }
 
-async function getProduct(slug: string): Promise<IProductFull | null> {
-    try {
-        const response = await fetch(`${API_URL}/products/by-slug/${slug}`, {
-            next: { revalidate: 60 }
-        });
-
-        if (!response.ok) return null;
-
-        return await response.json();
-    } catch {
-        return null;
-    }
+// Цена — точки из cookie; у поисковиков cookie нет, им отдаётся цена точки по умолчанию
+async function getProduct(slug: string) {
+    const locationId = await getServerLocationId();
+    const product = await getProductBySlug(slug, locationId);
+    return { product, locationId };
 }
 
 export async function generateMetadata({ params }: IProductPageParams): Promise<Metadata> {
-    const product = await getProduct(params.slug);
+    const { product } = await getProduct(params.slug);
 
     if (!product) {
         return { title: 'Товар не найден' };
     }
 
-    const price = product.locations[0]?.price;
     const name = product.name;
     const categoryName = product.category?.name ?? '';
 
@@ -43,7 +34,7 @@ export async function generateMetadata({ params }: IProductPageParams): Promise<
         name,
         productDescription,
         `Вес: ${product.weight} г`,
-        price ? `Цена: ${price} ₽` : '',
+        product.price ? `Цена: ${product.price} ₽` : '',
         `Заказывайте ${name.toLowerCase()} в Bar2917 — только свежие ингредиенты`
     ].filter(Boolean).join('. ') + '.';
 
@@ -64,11 +55,13 @@ export async function generateMetadata({ params }: IProductPageParams): Promise<
 }
 
 export default async function ProductPage({ params }: IProductPageParams) {
-    const product = await getProduct(params.slug);
+    const { product, locationId } = await getProduct(params.slug);
 
     if (!product) {
         notFound();
     }
 
-    return <ProductPageClient initialProduct={product} />;
+    const similarProducts = await getSimilarProducts(product.id, locationId);
+
+    return <ProductPageClient product={product} similarProducts={similarProducts} />;
 }

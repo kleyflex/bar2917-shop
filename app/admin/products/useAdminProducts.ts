@@ -14,13 +14,13 @@ export interface IAdminProductRow {
 export const useAdminProducts = () => {
     const { data, isFetching, refetch } = useQuery({
         queryKey: ['getAdminProducts'],
-        queryFn: () => ProductService.getAll(),
-        select: data => data.data.products.map((product): IAdminProductRow => ({
+        queryFn: () => ProductService.getAllAdmin(),
+        select: data => data.data.map((product): IAdminProductRow => ({
             id: product.id,
             name: product.name,
             image: product.image,
             categoryName: product.category?.name ?? '—',
-            isActive: (product as { isActive?: boolean }).isActive ?? true,
+            isActive: product.isActive,
             slug: product.slug
         }))
     })

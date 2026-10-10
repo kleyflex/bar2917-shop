@@ -3,7 +3,7 @@ import { NextUIProvider } from "@nextui-org/react"
 import { QueryClientProvider } from "@tanstack/react-query"
 import dynamic from 'next/dynamic'
 import { Next13ProgressBar } from 'next13-progressbar'
-import { PropsWithChildren } from "react"
+import { PropsWithChildren, useEffect } from "react"
 import { Toaster } from "react-hot-toast"
 import { Provider } from "react-redux"
 import { PersistGate } from "redux-persist/integration/react"
@@ -19,6 +19,11 @@ const CookieBanner = dynamic(() => import('@/components/ui/CookieBanner'), {
 export default function Providers({
    children
 }: PropsWithChildren<unknown>) {
+    // Восстанавливаем сохранённое состояние (корзина, точка) только после гидрации
+    useEffect(() => {
+        persistor.persist()
+    }, [])
+
     const content = (
         <AuthProvider>
             <Toaster position="top-center" containerClassName="toaster-container" />

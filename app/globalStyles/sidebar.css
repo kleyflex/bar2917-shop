@@ -22,6 +22,7 @@
 }
 
 .sidebar__menu__item {
+  position: relative;
   width: 228px;
   height: 58px;
   border-radius: 10px;
@@ -31,12 +32,39 @@
   align-items: center;
   margin-bottom: 8px;
   padding-left: 10px;
+  transition: background-color .2s ease, border-color .2s ease;
 }
 
 .sidebar__menu__item:hover {
-  transition: .2s ease-in-out;
-  background-color: #ff880009;
-  border: 1px solid var(--color-primary);
+  background-color: #242424;
+  border-color: #3a3a3a;
+}
+
+.sidebar__menu__item:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Активный раздел: тёплая подложка, оранжевая рамка и светящийся индикатор слева */
+.sidebar__menu__item.is-active {
+  background: linear-gradient(90deg, rgba(255, 138, 0, .16) 0%, rgba(255, 138, 0, .04) 100%);
+  border-color: rgba(255, 138, 0, .55);
+}
+
+.sidebar__menu__item.is-active::before {
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: 14px;
+  bottom: 14px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background-color: var(--color-primary);
+  box-shadow: 0 0 10px rgba(255, 138, 0, .6);
+}
+
+.sidebar__menu__item.is-active .sidebar__menu__item__span {
+  font-weight: 500;
 }
 
 .sidebar__menu__item__div {

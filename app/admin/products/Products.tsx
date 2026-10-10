@@ -1,5 +1,4 @@
 'use client'
-import MainLayout from "@/components/layouts/MainLayout"
 import ButtonCustom from "@/components/ui/button/ButtonCustom"
 import Loader from "@/components/ui/Loader"
 import AdminActions from "@/components/ui/admin/admin-list/admin-actions/AdminActions"
@@ -33,7 +32,7 @@ const Products: FC = () => {
     const visibleRows = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE)
 
     return (
-        <MainLayout>
+        <>
             <section>
                 <div className="flex flex-row items-center justify-between w-10/12">
                     <h1>Все товары</h1>
@@ -125,7 +124,7 @@ const Products: FC = () => {
                     </div>
                 )}
             </section>
-        </MainLayout>
+        </>
     )
 }
 

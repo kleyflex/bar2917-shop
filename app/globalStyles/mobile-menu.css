@@ -43,7 +43,26 @@
 
 .mobile-menu__item:hover,
 .mobile-menu__item:active {
+  background-color: #333333;
+}
+
+/* Активный раздел — как в сайдбаре. Селектор длиннее, чтобы перебить !important из adaptation.css */
+.mobile-menu__items .mobile-menu__item.is-active {
+  position: relative;
+  background: linear-gradient(90deg, rgba(255, 138, 0, .18) 0%, rgba(255, 138, 0, .05) 100%) !important;
+  border-color: rgba(255, 138, 0, .55) !important;
+}
+
+.mobile-menu__items .mobile-menu__item.is-active::before {
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
   background-color: var(--color-primary);
+  box-shadow: 0 0 10px rgba(255, 138, 0, .6);
 }
 
 .mobile-menu__icon {

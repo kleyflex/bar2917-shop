@@ -39,7 +39,9 @@ import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistStore } from 
       })
   })
 
-  export const persistor = persistStore(store)
+  // manualPersist: восстановление из localStorage запускается в Providers после гидрации,
+  // иначе первый клиентский рендер расходится с серверным (корзина, точка) и React перерисовывает весь документ
+  export const persistor = persistStore(store, { manualPersist: true } as Parameters<typeof persistStore>[1])
 
   export type TypeRootState = ReturnType<typeof mainReducer>
   

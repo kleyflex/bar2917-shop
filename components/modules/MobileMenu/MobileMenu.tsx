@@ -1,5 +1,6 @@
 'use client';
 
+import { useActiveCategory } from '@/components/hocs/useActiveCategory';
 import { useCategoryLinks } from '@/components/hocs/useCategoryLinks';
 import { Button, Modal, ModalBody, ModalContent } from '@nextui-org/react';
 import Image from 'next/image';
@@ -11,6 +12,7 @@ import { RxHamburgerMenu } from 'react-icons/rx';
 const MobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const categories = useCategoryLinks();
+  const activeSlug = useActiveCategory();
 
   const handleOpen = () => {
     setIsOpen(true);
@@ -96,7 +98,8 @@ const MobileMenu = () => {
                   <Link
                     key={category.id}
                     href={`/category/${category.slug}`}
-                    className="mobile-menu__item"
+                    className={`mobile-menu__item${category.slug === activeSlug ? ' is-active' : ''}`}
+                    aria-current={category.slug === activeSlug ? 'page' : undefined}
                     onClick={onClose}
                   >
                     <div className={`mobile-menu__icon item--${category.slug}`}></div>

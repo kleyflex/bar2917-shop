@@ -2,7 +2,7 @@ import { ILocation, LocationService } from '@/app/services/location.service';
 import { setLocations, setSelectedLocation } from '@/app/store/location/location.slice';
 import { RootState } from '@/app/store/store';
 import { Button, Modal, ModalBody, ModalContent, ModalHeader, useDisclosure } from '@nextui-org/react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import { MapPin } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -10,7 +10,6 @@ import { useDispatch, useSelector } from 'react-redux';
 
 export default function LocationSelector() {
   const dispatch = useDispatch();
-  const queryClient = useQueryClient();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { selectedLocationId, locations } = useSelector((state: RootState) => state.location);
   const [isMobile, setIsMobile] = useState(false);
@@ -46,7 +45,7 @@ export default function LocationSelector() {
 
   // Отдельный эффект для инициализации выбранной локации
   useEffect(() => {
-    const initializeSelectedLocation = async () => {
+    const initializeSelectedLocation = () => {
       if (locations.length > 0 && !selectedLocationId) {
         const defaultLocation = locations.find(loc => loc.isDefault && loc.isActive);
         const activeLocation = locations.find(loc => loc.isActive);
@@ -54,38 +53,17 @@ export default function LocationSelector() {
 
         if (locationToSet) {
           dispatch(setSelectedLocation(locationToSet.id));
-          
-          // Инвалидируем зависимые запросы после установки локации
-          await Promise.all([
-            queryClient.invalidateQueries({ queryKey: ['category-products'] }),
-            queryClient.invalidateQueries({ queryKey: ['products'] }),
-            queryClient.invalidateQueries({ queryKey: ['get product'] }),
-            queryClient.invalidateQueries({ queryKey: ['cart-products'] })
-          ]);
         }
       }
     };
 
     initializeSelectedLocation();
-  }, [locations, selectedLocationId, dispatch, queryClient]);
+  }, [locations, selectedLocationId, dispatch]);
 
-  const handleLocationChange = async (locationId: number) => {
+  // Данные под новую точку перезагрузит LocationCookieSync (cookie + router.refresh)
+  const handleLocationChange = (locationId: number) => {
     dispatch(setSelectedLocation(locationId));
     onClose();
-
-    // Инвалидируем все зависимые запросы
-    await Promise.all([
-      queryClient.invalidateQueries({ queryKey: ['category-products'] }),
-      queryClient.invalidateQueries({ queryKey: ['products'] }),
-      queryClient.invalidateQueries({ queryKey: ['get product'] }),
-      queryClient.invalidateQueries({ queryKey: ['cart-products'] })
-    ]);
-
-    // Принудительно обновляем все зависимые запросы
-    await queryClient.refetchQueries({
-      queryKey: ['category-products'],
-      type: 'active'
-    });
   };
 
   // Показываем лоадер только при первой загрузке
